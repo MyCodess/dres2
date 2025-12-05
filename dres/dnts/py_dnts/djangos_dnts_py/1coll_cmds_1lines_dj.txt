@@ -1,0 +1,8 @@
+_________________________ DJango_cmds/..._1coll...________________________________________________________
+
+
+#####  ==========  oneliners/cmds/qckys/ ... DJango:
+	- dj-libs-path / dj-source-path ?:  python -c "import django; print(django.__path__)"
+	- dj-install-infs ?:         python -c "import django, pprint; pprint.pp(vars(django))"   #-bzw.: ...(django.__dict__)"
+##________________________________________  ___________________________
+

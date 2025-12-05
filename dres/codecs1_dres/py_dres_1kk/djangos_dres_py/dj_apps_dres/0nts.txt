@@ -1,0 +1,4 @@
+- !! see also the main ones in /c/var/tmp/tmpu/up1/prjs/ofc1/cod1/wkscod1/dj*  !
+
+- ! here all djapps WITHOUT sqlite3-DB file (deleted) ! so have to do makemigrate/migrate again !! /:240507  ;
+

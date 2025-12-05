@@ -1,0 +1,153 @@
+_______________________ diango_dnts ... ________________________________________
+
+
+
+#####  ==========  URLs/docs/helps/...:
+	- HTML+TXT-docs_DW :  https://docs.djangoproject.com/
+	- ! docs-loc-URLs : see ofc1_chrom_BMs!
+	- TXT-docs of dj; in its docs-zip_DM from https://docs.djangoproject.com/  ! !good for grep ...!
+##________________________________________  ___________________________
+
+#####  ==========  BASE_DIR/prj-dir   <--->  dj-dir /dj-settings-DIR  - DIFFs: 
+	--- eg:
+	django-admin  startproject site1 tut2508     #-->
+		prj-dir/ BASE_DIR:  ./tut2508 (parent-DP of manage.py, containing evt. apps + di-dir) ,
+		dj-dir: ./tut2508/site1  containing ONLY dj-stuff (settings, confs,...)
+	_______:  
+    --- ! DIFF :  outer/dj-container-/BASE_DIR  (containing manage.py , usu. also containg user-Apps)   <--->   inner-/djSettings-/djPrj-DIR (containing settings[.py])
+        - the OUTER/BASE_DIR (./netserv11/ , containing manage.py) is ONLY the container-folder and can be RENAMED/moved anytime ! Its name doesn’t matter to Django!
+        - the INNER/DJ-own-Prj-Dir/settings,db,dj-internals,... (./netserv11/netserv11/ , containing settings[.py] + __init__.py) is THE  DJANGO-prj-dir !!  Its name is the Python package name you’ll need to use to import anything inside it !
+        -- So, dir-levels:
+        - ./netserv11/            ::  outer/dj-container-/BASE_DIR , manage.py   ##-- can be RENAMED/moved anytime !
+        - ./netserv11/netserv11/  ::  inner-/djSettings-/djPrj-DIR (containing setting.py , asgi, wsgi, urls.py)
+        -./netserv11/ix1/         ::  user_app1-folder, app1-views/models/...
+    - BASE_DIR  == container-folder (containing manage.py):
+		- python -c "import netserv11.netserv11.settings; print(netserv11.netserv11.settings.BASE_DIR)" ##--> C:\Users\DKX8H1N\var3\w3\cod1\works1\dj11\netserv11
+        - bzw.  ~/ofc1/cod1/works1/dj11/netserv11 ; $ python -c "import netserv11.settings ; print(netserv11.settings.BASE_DIR)"
+		- ! if "Not Found Module ..." error : add __init__.py to all above DIRs !
+##________________________________________  ___________________________
+
+
+#####  ==========  Tut-TOC (5.0):
+- Tut1--setup-prj+view1 /  Requests and responses
+- Tut2--model/DBs/migrates + admin-site
+- Tut3--views/URLs/templates
+- Tut4--generic-views/Forms
+- Tut5--testings
+- Tut6--static-files/stylesheet/htmls/...
+- Tut7--admin-site
+- Tut8--third-party packages
+So: Tutorial: Part 1: Requests and responses | Part 2: Models and the admin site | Part 3: Views and templates | Part 4: Forms and generic views | Part 5: Testing | Part 6: Static files | Part 7: Customizing the admin site | Part 8: Adding third-party packages
+##________________________________________  ___________________________
+
+
+#####  ==========  settings/configs-dj :
+    - Ref:  https://docs.djangoproject.com/en/4.2/ref/settings/
+    - pydoc_dj.sh   django.conf  /  django.conf.settings
+    - dafault dj-app-settings:   pydoc django.conf.global_settings  #bzw.   django/conf/global_settings.py  
+    - which apps are currently installed/active?:  from django.conf import settings ;  settings.INSTALLED_APPS ;
+    https://docs.djangoproject.com/en/4.1/topics/settings/  :descp
+    https://docs.djangoproject.com/en/4.1/ref/settings/     :Ref
+
+	_______:  query settings on cmdline or in app-web-page:
+	- ! printout-settings of cu-env:     python -m manage  print_settings
+	- query BASE_DIR  cu-path : from django.conf import settings; print(settings.BASE_DIR});
+	- query settings as OL-/web-page of a dj-app: add to a view:
+		# -un-sorted:  for ii in settings.__dict__: sets1 = f"{sets1}<br>{ii}   ::   {settings.__dict__[ii]}"
+		for k, v in sorted(settings.__dict__.items()): sets1 = f"{sets1}<br>{k}   ::   {v}"
+		return HttpResponse(f"Home-Index-netserv1,<p>- BASE_DIR:  {settings.BASE_DIR}<p>{sets1}")
+##________________________________________  ___________________________
+
+
+#####  ==========  django.setup() :
+	_______:  calling dj-modules for standalone modules (modules not called by manage.py,...):
+	then you have to call manually configure() for settings, and setup() to load apps ! but both may NOT be called multiple times!! so, eg:
+	---
+	- !! setup may NOT be called multiple times (probably fine in non-parallel-executions), then:
+	the setup() is idempotent (same-results by multiple-calls) BUT NOT re-entrant (not-safe-by-parallel-execution, not thead-safe, not-safe-by-interruption-and-restart)!
+	django.setup() MUST be called even before any imports of any other django packages as client/User/...!
+	---
+	import django.apps ; from django.conf import settings
+	def django_setup1():
+		if not settings.configured: settings.configure()
+		if not django.apps.apps.ready: django.setup()
+	django_setup1()
+	---
+	- !! pytest is doing this internally (really its plugin pytest-django!) and so you need NOT to do this if you call your module by pytest ! but have to do it if calling directly by pathon -m mymoduleX !
+	see:
+	https://code.djangoproject.com/ticket/28752
+	https://docs.djangoproject.com/en/5.0/ref/applications/#initialization-process
+	https://docs.djangoproject.com/en/5.0/topics/settings/#calling-django-setup-is-required-for-standalone-django-usage
+##________________________________________  ___________________________
+
+
+#####  ==========  URLs / URLConf / URl-Dispatcher :
+	- dj_dc/django-docs/topics/http/urls.html
+	- "/" : in path(...): do-NOT-leading-"/" , but do-ending-"/" ! eg: path("articles/<int:year>/", views.year_archive) ! and No: /articles/... or .../<int:year> !
+##________________________________________  ___________________________
+
+
+#####  ==========  manage.py / django-admin cmds :
+    - !! REF:  django-docs/ref/django-admin.html + Tut-02
+		- ! ANY dj-cmd with --help  as:
+        - django-admin help  #bzw:   python -m manage --help  #-or 'help'
+		- create admin-user:  python -m manage createsuperuser --help  ##-- --username xxx --email xx 
+		- register a model/class to be shown in admin-site: Tut-02: in polls/admin.py : ... admin.site.register(Question)
+##________________________________________  ___________________________
+
+
+#####  ==========  dj-shell:
+	- call (in your prjDIr /OR set djVAR):     python -m manage shell  [-v2 -i ipython ] :
+		 - -i ... : call dj-shell using ipython instead std-py-interpreter:
+		 - -v2  (-v [0,1,2,3]) : to show automatically loaded models! (by 'shell' all models of installed-apps are gleich loaded! not needed to load import them explicitely!)
+	- see  dj_dc/django-docs/intro/tutorial02.html  ,  django-docs/ref/django-admin.html#shell
+	- ! By default, the shell command automatically imports the models from your INSTALLED_APPS !
+	- ! manage.py sets the DJANGO_SETTINGS_MODULE environment variable, which gives Django the Python import path to your mysite/settings.py file.
+    - ipython-call :  (cd to your dj-prj1 and):   $ python -m manage shell  -i ipython  ##--/django-docs/ref/django-admin.html#shell
+	#______:  setup()...:
+	-! dj-shell alread does settings.configure() and django.setup() if it starts with the right manage.py ! checkit:
+	import django;  from django.conf import settings
+	settings.configure() if not settings.configured else print("__already-configured__")
+	django.setup() if not django.apps.apps.ready  else print("__already-setted-up__")
+##________________________________________  ___________________________
+
+
+#####  ==========  migrates:
+	- "migrate" : migrate command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your mysite/settings.py file and the database migrations shipped with the app! command will only run migrations for apps in INSTALLED_APPS !
+	- "sqlmigrate" command doesn’t actually run the migration on your database - instead, it prints it to the screen so that you can see what SQL Django thinks is required.
+	- "python -m manage check"  : this checks for any problems in your project without making migrations or touching the database
+##________________________________________  ___________________________
+
+
+#####  ==========  fixtures/loaddata/dump-data/... on cmdline or in-code(for tests):
+    django-docs/topics/db/fixtures.html
+	django-docs/howto/initial-data.html
+    python -m manage   dumpdata > dump1.json
+    django-admin loaddata <fixture label>
+##________________________________________  ___________________________
+
+
+#####  ==========  authentications/authorizations , login/logout/... :
+    - ! dj_dc/django-docs/topics/auth/default.html , dj_dc/django-docs/topics/auth/index.html
+	- ! eg-auth-app--tut:  https://learndjango.com/tutorials/django-login-and-logout-tutorial
+	- Creating superusers:  python -m manage createsuperuser --username=joe --email=joe@example.com  #-: dcIT/dj_dc/django-docs/topics/auth/default.html
+	- change-PW: manage.py changepassword <username> #-: /dj_dc/django-docs/topics/auth/default.html#changing-passwords
+	- tests-login:   django.test.Client().login() / aforce_login() :  simulate the effect of a user logging into the site : file:///C:/Users/DKX8H1N/var3/w3/dcIT/dj_dc/django-docs/topics/testing/tools.html
+	- delete a user:  python manage.py shell;  from django.contrib.auth.models import User;  User.objects.get(username="u11", is_superuser=True).delete();
+##________________________________________  ___________________________
+
+
+#####  ==========  Meta:
+	- https://docs.djangoproject.com/en/5.0/topics/db/models/#meta-options  ,  Ref: https://docs.djangoproject.com/en/5.0/ref/models/options/
+	- Model metadata is “anything that’s not a field” ...
+	- Give your model metadata by using an inner class Meta, like:  class Meta: ...
+##________________________________________  ___________________________
+
+
+#####  ==========  plugins / addies / ... :
+	_______:  django-debug-toolbar :
+	- ! Tut08 !  dj_dc/django-docs/intro/tutorial08.html  , https://django-debug-toolbar.readthedocs.io/
+	- python -m pip install django-debug-toolbar --upgrade
+	- setup-steps + integrate into your prj: see   https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+##________________________________________  ___________________________
+

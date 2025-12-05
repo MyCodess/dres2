@@ -1,0 +1,166 @@
+______________________________ minikube ... _____________________________________________________
+https://minikube.sigs.k8s.io/
+https://wiki.archlinux.org/title/Minikube
+
+##############################  trys/dones...: ##################################################
+_______:  req:
+pacman  -Sy  docker kubelet kubectl minikube runc  ##--??kubelet??, runc for OCI-CLI !
+#- if wanted QEMU : pacman -Syu libvirt qemu-desktop dnsmasq iptables-nft
+
+systemctl  restart docker.service docker.socket  kubelet.service  ##--OR enable them if wanted reboot-active/oersistent !
+-! NO symlink/rel-path in docker/minikube configs!! ONLY absolute-phys-path! also check in /etc/docker/daemon.json and MINIKUBE_HOME !
+
+_______:  cleaning if req/problems:
+#-!! the problem with new-start-fails was obv. the old/prev  ~/.kube/config ! so have to check it always if major restructuing or so ...! ::
+minikube delete --all --purge
+#- check also docker and ip !:
+docker image ls -a; docker container ls -a; docker ps -a;  ##--and for full-cleaning delete them all: docker rm/rmi <ID> ...
+pacman -Rsc minikube kubectl kubeadmin ... # kube*   ##--re-install ...
+
+_______:  checks:
+expg kube
+minikube status
+psg kube ; rm -rf .... ;
+docker image ls -a; docker container ls -a; docker ps -a;  ##--and for full-cleaning delete them all: docker rm/rmi <ID> ...
+
+#####  ==========  /:251126 :  arx1:
+_______:  start:
+systemctl  restart   docker.service   docker.socket
+##-- ?systemctl enable kubelet.service
+alias mk1='MINIKUBE_HOME=/up1/media/VARAU2fs/varau2/minikube1  minikube'  ##--? MINIKUBE_IN_STYLE=0
+#--
+minikube start --driver=docker --force-systemd=true  ##-  mk1 start
+	##--> it configured also ~/.kube/config : kubectl is now configured to use "minikube" cluster and "default" namespace by default ...
+	- DW ca. 850 MB in /up1/media/VARAU2fs/varau2/minikube1/.minikube/  ...
+#--
+kubectl  get po -A   ##--> see minikube pods ! eight pods da!
+#--
+minikube addons enable metrics-server
+mk1 dashboard   --url   ##--> and open the url in your browser /OR without --url to auto-open!
+#-??-:  ./usr/bin/minikube-gui
+#--
+mk1 stop ; systemctl stop  docker.service docker.socket ;
+
+_______:  TUTs of kubernetes.io :   ##--> restart all again for TUTs https://kubernetes.io/docs/tutorials/ :
+--- https://kubernetes.io/docs/tutorials/hello-minikube/  ::
+# Run a test container image that includes a webserver
+kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.53 -- /agnhost netexec --http-port=8080
+...
+kubectl exec -it hello-node-6c9b5f4b59-w6fqn  -- bash   ##-terminal-conn
+
+
+##________________________________________  ___________________________
+
+
+##############################  1coll-logs-bigger....: ##############################################################
+#####  ==========  /:251128 :  
+#-!  systemctl  restart docker.service docker.socket  kubelet.service  ##-wer all running! if req kubelet.service ??
+#--
+/up1/varu/varau/wks/minikubes1_wk
+minikubes1_wk : minikube  start  --driver=docker
+😄  minikube v1.37.0 on Arch
+    ▪ MINIKUBE_HOME=/up1/mnt/VARAU2fs/varau2/minikube1
+✨  Using the docker driver based on user configuration
+📌  Using Docker driver with root privileges
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.48 ...
+💾  Downloading Kubernetes v1.34.0 preload ...
+    > preloaded-images-k8s-v18-v1...:  337.07 MiB / 337.07 MiB  100.00% 1.70 Mi
+    > gcr.io/k8s-minikube/kicbase...:  488.51 MiB / 488.52 MiB  100.00% 2.16 Mi
+🔥  Creating docker container (CPUs=2, Memory=3072MB) ...
+🐳  Preparing Kubernetes v1.34.0 on Docker 28.4.0 ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🔎  Verifying Kubernetes components...
+🌟  Enabled addons: default-storageclass, storage-provisioner
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+/up1/varu/varau/wks/minikubes1_wk
+minikubes1_wk : date
+2025-11-28T17:15:38 CET
+#--
+docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS          PORTS                                                                                                                                  NAMES
+0945978a377f   gcr.io/k8s-minikube/kicbase:v0.0.48   "/usr/local/bin/entr…"   35 minutes ago   Up 35 minutes   127.0.0.1:32768->22/tcp, 127.0.0.1:32769->2376/tcp, 127.0.0.1:32770->5000/tcp, 127.0.0.1:32771->8443/tcp, 127.0.0.1:32772->32443/tcp   minikube
+#--
+docker image ls
+IMAGE                                                                                                 ID             DISK USAGE   CONTENT SIZE   EXTRA
+gcr.io/k8s-minikube/kicbase:v0.0.48                                                                   41454ef774d0       1.84GB          512MB
+gcr.io/k8s-minikube/kicbase@sha256:7171c97a51623558720f8e5878e4f4637da093e2f2ed589997bedc6c1549b2b1   7171c97a5162       1.84GB          512MB    U
+#--
+docker container  ls -a
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS          PORTS                                                                                                                                  NAMES
+0945978a377f   gcr.io/k8s-minikube/kicbase:v0.0.48   "/usr/local/bin/entr…"   36 minutes ago   Up 36 minutes   127.0.0.1:32768->22/tcp, 127.0.0.1:32769->2376/tcp, 127.0.0.1:32770->5000/tcp, 127.0.0.1:32771->8443/tcp, 127.0.0.1:32772->32443/tcp   minikube
+#--
+
+##________________________________________  ___________________________
+
+#####  ==========  /:251127-only-bigger-logs of the above try!:
+minikubes1_wk : mk1  start --driver=docker --force-systemd=true
+  minikube v1.37.0 on Arch
+  ▪ MINIKUBE_HOME=/up1/media/VARAU2fs/varau2/minikube1
+  Using the docker driver based on user configuration
+  Using Docker driver with root privileges
+  Starting "minikube" primary control-plane node in "minikube" cluster
+  Pulling base image v0.0.48 ...
+  Downloading Kubernetes v1.34.0 preload ...
+  > preloaded-images-k8s-v18-v1...:  337.07 MiB / 337.07 MiB  100.00% 7.68 Mi
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 0 B p/s
+  > gcr.io/k8s-minikube/kicbase...:  451.82 MiB / 488.52 MiB  92.49% 798.32 K
+  > index.docker.io/kicbase/sta...:  488.52 MiB / 488.52 MiB  100.00% 13.97 M
+  minikube was unable to download gcr.io/k8s-minikube/kicbase:v0.0.48, but successfully downloaded docker.io/kicbase/stable:v0.0.48@sha256:7171c97a51623558720f8e5878e4f4637da093e2f2ed589997bedc6c1549b2b1 as a fallback image
+  Creating docker container (CPUs=2, Memory=3900MB) ...
+  Preparing Kubernetes v1.34.0 on Docker 28.4.0 ...
+  Configuring bridge CNI (Container Networking Interface) ...
+  Verifying Kubernetes components...
+  ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+  Enabled addons: default-storageclass, storage-provisioner
+  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+##________________________________________  ___________________________
+
+
+#####  ==========  /:251126-only-bigger-logs of the above try!:
+------------------------- logs/:251126: ------------------------
+/up1/media/VARAU2fs/varau2/minikube1
+minikube1 : mk1 start
+  minikube v1.37.0 on Arch 
+  ▪ MINIKUBE_HOME=/up1/media/VARAU2fs/varau2/minikube1
+  Automatically selected the docker driver
+  Using Docker driver with root privileges
+  Starting "minikube" primary control-plane node in "minikube" cluster
+  Pulling base image v0.0.48 ...
+  Downloading Kubernetes v1.34.0 preload ...
+  > preloaded-images-k8s-v18-v1...:  337.07 MiB / 337.07 MiB  100.00% 12.08 M
+  > gcr.io/k8s-minikube/kicbase...:  488.52 MiB / 488.52 MiB  100.00% 9.53 Mi
+  Creating docker container (CPUs=2, Memory=3900MB) ...
+  StartHost failed, but will try again: creating host: create host timed out in 360.000000 seconds
+  docker "minikube" container is missing, will recreate.
+  Creating docker container (CPUs=2, Memory=3900MB) ...
+  Preparing Kubernetes v1.34.0 on Docker 28.4.0 ...
+  Configuring bridge CNI (Container Networking Interface) ...
+  Verifying Kubernetes components...
+  ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+  Enabled addons: storage-provisioner, default-storageclass
+  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+/up1/media/VARAU2fs/varau2/minikube1
+----
+kubectl  get po -A
+NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE
+kube-system   coredns-66bc5c9577-fc8r9           0/1     Running   0          12s
+kube-system   coredns-66bc5c9577-pjqrq           0/1     Running   0          12s
+kube-system   etcd-minikube                      1/1     Running   0          18s
+kube-system   kube-apiserver-minikube            1/1     Running   0          18s
+kube-system   kube-controller-manager-minikube   1/1     Running   0          18s
+kube-system   kube-proxy-qgpnv                   1/1     Running   0          14s
+kube-system   kube-scheduler-minikube            1/1     Running   0          18s
+kube-system   storage-provisioner                1/1     Running   0          17s
+----
+##________________________________________  ___________________________
+
