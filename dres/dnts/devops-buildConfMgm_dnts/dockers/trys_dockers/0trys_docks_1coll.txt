@@ -1,0 +1,55 @@
+_______________________ trys2, on fedora /2512fed ... _______________________________________
+
+-!! trotz der docker-config, it saves images in /var/lib/containerd/
+#####  ==========  /:251206 :  
+systemctl restart docker.service  docker.socket
+##- it has no bash; so start it with sh :
+docker run --rm  -it --name alp1  --hostname  alp1    alpine:latest  /bin/sh   ##--or without --rm , in case that you forget commit ...!?
+
+_______:  in-dock : install/add pkgs :
+apk add  bash vim  mandoc man-pages sudo coreutils shadow
+apk add  mandoc man-pages mandoc-apropos less less-doc
+apk add  apk-tools apk-tools-doc apko-bash-completion bash-doc bash-completion bash-completion-doc
+apk add  python3 curl lynx w3m
+#-setting hostname obv. no sense! the docker-call set it! so call it with:   docker run  --hostname xxx ...  ##-instead: vi  /etc/hostname   ##--> alp1bash1   #-just to be different, for prompts,...
+
+#--- evv
+mkdir /up1/ ; cd /up1/ ; mkdir   etcu  media  mnt  optu prjs  t1  varau2 w1 ;  ##--instead mount-pointslinks
+#-host:   docker cp -a /up1/.ev13/  alp1:/up1/  ##--so without volume-bindings; just direct copy from host-->container !
+/up1 # vim .ev13/etc/aliases.sh   ##-- only ls1 alias : no date-iso-arg ! (empty DIRs there as w1 , prj has to be created!...
+vim   + .ev13/etc/vimrc    ##--comment-out:   pathogen#infect  +  dir (for swp-files)
+vi .ev13/etc/profile.sh    ##-- hostname instead hostnamectl  + change PS1 to:  PS1=$"\n\w\n\\u@\h: "
+vim /etc/bash/bashrc        ##--add:  source  /up1/setevv_alp1.sh
+vi /up1/setevv_alp1.sh     ##--add:  source /up1/.ev13/etc/profile.sh
+chmod 77  /up1/setevv_alp1.sh
+#-!- check in the same container if all working, just switch to bash:
+/bin/bash
+
+_______:  save/commit it BEFORE leaving the source/other container (so you can correct problemsi without starting from null ...)
+-!! BEFORE leavint the running container, commit cu-status of the container in a nwe image:
+#-host:  docker commit alp1  alp1:bash1   ##--->   1d32230ae40d768ba5474b4e7d13484dbad284011b9f279c2f0fcab4134616d6
+docker image ls -a
+#-test it, before leaving the other container:
+docker run --rm -it --hostname alp1evv1  --name alp1evv1  alp1:bash1  /bin/bash   ##--so setting the container-hostname here
+docker inspect  <image-id>
+##________________________________________  ___________________________
+
+
+#####  ==========  /:251206 :  arx-base-devel-1:
+docker run --rm -it --hostname arxdevel1  --name arxdevel1   archlinux:base-devel  /bin/bash
+_______:  in-dock/guest-OS::
+	pacman-key  --init  ;  pacman -Syu ; 
+	#--> NOT log out! forst save the updates in host:
+host$  docker commit  arxdevel1 arxdevel1b   ##--> 637d64e58bc4f1a23a4b6f947d00aecdb3dd8ceca3550b8ff8602f40dad4e5c3
+	#- relogin with new image-name /OR ID:
+host$  docker run --rm -it --hostname arxdevel1  --name arxdevel1b   arxdevel1b   /bin/bash
+	pacman -Syu  #--> must be nothing ...
+	pacman -Syu xfce4
+host$  docker commit   -m "xfce4-basis-added"  arxdevel1b  -->  17b5e836eb42ccab86e343d0861260600467cfb10341b1b55167dcfa873e194c
+	[root@arxdevel1 /]# useradd -m t1 ; su - t1 ; 
+host$  docker commit   -m "xfce4-basis-added--user-t1"  arxdevel1b  ##-->   sha256:b29937d52ac35bc1c81d1d6a17175483ecae72c33a6ff1a4ff7d5bd10350bbe9
+
+
+
+##________________________________________  ___________________________
+

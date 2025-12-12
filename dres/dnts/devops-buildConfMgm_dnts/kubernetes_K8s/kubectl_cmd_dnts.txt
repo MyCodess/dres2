@@ -1,5 +1,4 @@
 _____________________ kubectl cmd dnts: _______________________________________________
-- 
 
 
 #####  ==========  URLs/helps/...:
@@ -26,10 +25,24 @@ _____________________ kubectl cmd dnts: ________________________________________
 ##________________________________________  ___________________________
 
 
+#####  ==========  PODs:
+	kubectl describe pods
+	kubectl get pods -o wide -A
+##________________________________________  ___________________________
+
+
+#####  ==========  tollouts/rollbacks/...
+	_______:  enforcing a rollout (new PODs! replacement of cu-pods with new ones):
+	- Trigger the rollout:  kubectl rollout restart deployment configmap-env-var
+	- Wait for the rollout to complete: kubectl rollout status deployment configmap-env-var --watch=true
+	see https://kubernetes.io/docs/tutorials/configuration/
+##________________________________________  ___________________________
+
+
 
 ##################### qkys/shorties/...: ##############################################################
 _______:  
-kubectl  cluster-info   [dump]
+kubectl  cluster-info [ dump ]
 
 _______:  
 kubectl  describe xxx
