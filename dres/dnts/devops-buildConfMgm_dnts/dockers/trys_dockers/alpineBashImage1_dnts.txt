@@ -3,7 +3,7 @@
 #####  ==========  alp1-bash+evv:
 - ! requires here also the dir./share1/up1/ , which has also minimal following adaptions and also  ./share1/up1/setevv_alp1.sh
 - alp1-bash-evv-call with share (could also copy the evv to the image, so without host-share, but so ok!):
-	docker run --rm  -it --name alp1bash  --hostname  alp1bash  -v  /up1/varu/varau/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
+	docker run --rm  -it --name alp1bash  --hostname  alp1bash  -v  /up1/varu/varau/dvl1_var/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
 
 _______:  alp1-bash-image:
 ##- it has no bach; so start it with sh :
@@ -32,13 +32,13 @@ docker run --rm --name alp1bash1wk  --hostname alp1bash1wk -it sha256:30efbcdf7f
 
 
 _______:  previous try, the up1-dir as a share-dir on host!  evv-adapts-nts:
---- evv-profs (put on the share  /up1/varu/varau/docks1_var/share1):
-cd /up1/varu/varau/docks1_var/share1/ ;  cp -a /up1/.cev  /up1/.cev . ; mkdir w1 prjs ; 
+--- evv-profs (put on the share  /up1/varu/varau/dvl1_var/docks1_var/share1):
+cd /up1/varu/varau/dvl1_var/docks1_var/share1/ ;  cp -a /up1/.cev  /up1/.cev . ; mkdir w1 prjs ; 
 cp  /etc/bash/bashrc /etc/bash/bashrc_1org
 vi /etc/bash/bashrc  ##--:  source  /mnt/host11/setevv_alp1.sh  ##--evv could be copied to the image, but so as share is ok!
 #-I- evv-for-alp1-bash--modifs:  only ls1 alias : no date-iso-arg ! (empty DIRs there as w1 , prj has to be created! in evv there are "cd ..." or realpath ... !)
 ln -s /mnt/host11/up1 /up1   ##--just to have same pathes, otherwise is ok also without ...
 docker commit alp1bash  alpine:bash1   ##-so save the status, BEFORE leaving the container, to alpine:bash1  !
 -! before leaving test the new image in another terminal with:
-docker run --rm  -it --name alp1bash_1  --hostname  alp1bash  -v  /up1/varu/varau/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
+docker run --rm  -it --name alp1bash_1  --hostname  alp1bash  -v  /up1/varu/varau/dvl1_var/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
 

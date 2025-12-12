@@ -2,6 +2,41 @@ ______________________________ minikube ... ____________________________________
 https://minikube.sigs.k8s.io/
 https://wiki.archlinux.org/title/Minikube
 
+
+
+#####  ==========  configs:
+-! https://minikube.sigs.k8s.io/docs/handbook/config/
+---
+declare -x MINIKUBE_HOME="/up1/mnt/VARAU2fs/varau2/minikube1"
+declare -x MINIKUBE_IN_STYLE="0"
+---
+- non-persistent configs: either envvars OR by flags/args to 'start', so check:  minikube start  --help
+	minikube start --iso-url="$ISO_URL"  ==  MINIKUBE_ISO_URL="$ISO_URL"  minikube ...
+- persistent-configs:  minikube config ... [ --help ]  #-eg:  minikube config set driver docker #-goes-to:  "~/.minikube/config/config.json"  #-see above url!
+- view cu-configs (non-defaults):  minikube config view
+- k8s-components-configs (so, Modifying Kubernetes-components-defaults as kubeadm/kubectl/..., not minikube itself):  minikube  start --extra-config  <component.key=value>
+	eg:  minikube start --extra-config=apiserver.v=10 --extra-config=kubelet.max-pods=100
+- driver/runtime config:  minikube start --container-runtime=docker
+---
+##________________________________________  ___________________________
+
+
+
+#####  ==========  
+- GUI/web:  minikube dashboard  [--url]
+- 
+##________________________________________  ___________________________
+
+
+#####  ==========  minikube-docker:
+- To point your shell to minikube's docker-daemon, run:  eval $(minikube -p minikube docker-env)   ##--: https://minikube.sigs.k8s.io/docs/handbook/pushing/
+	- so then after above, eg 'docker  ps'  will show you the containers INSIDE the minikube (so using minikube’s docker-env you )! (and not on your OS)
+- 
+##________________________________________  ___________________________
+
+
+
+
 ##############################  trys/dones...: ##################################################
 _______:  req:
 pacman  -Sy  docker kubelet kubectl minikube runc  ##--??kubelet??, runc for OCI-CLI !

@@ -31,7 +31,7 @@ _______:  VOCABs
 		- docker pull/push/run uses the required images from your configured registry.
 	- Docker objects :: images, containers, networks, volumes, plugins, and other objects.
 	- image :: is a read-only template with instructions for creating a Docker container.
-	- container :: is a runnable instance of an image. You can create, start, stop, move, or delete a container using the Docker API or CLI. Y
+	- container :: is a runnable instance of an image. You can create, start, stop, move, or delete a container using the Docker API or CLI.
 		- eg: docker run -i -t ubuntu /bin/bash  #-:  runs an ubuntu container, attaches interactively to your local command-line session, and runs /bin/bash.
 ##________________________________________  ___________________________
 
@@ -44,10 +44,10 @@ _______:  VOCABs
 		- for "Docker Desktop" of docker.com  see also arx-nts in:  https://wiki.archlinux.org/title/Docker#Docker_Desktop
 	- non-root user if  will run docker-cli/-cmds: then add the user to the docker user group, re-login and restart docker.service.
 		- usermod -a -G docker  u1    ##--!!- u1 must re-login !! check u1 groups in terminal with:  groups /OR id -a ; to relogin without xwin-restart:  exec sudo --login --user $USER
-	- vpn-active-note: starting the docker service may fail if you have an active VPN connection due to IP conflicts ! so better cmcli down vpn1 ;
+	- vpn-active-note: starting the docker service may fail if you have an active VPN connection due to IP conflicts ! so better nmcli down vpn1 ;
 		-try disconnecting the VPN before starting the docker service. You may reconnect the VPN immediately afterwards. 
 	- config docker-images/date-root-dir :
-		 - default : /var/lib/docker/ #-to change it: systemctl stop docker ; [mkdircd /etc/docker/ ] ; vi /etc/docker/daemon.json #-: { "data-root": "/up1/mnt/VARAU2fs/varau2/docks1/images" }  ##--I-NO exfat/fat! NO-symlink/rel-path!  dockerd will set permissions! see:  https://wiki.archlinux.org/title/Docker#Images_location
+		 - default-images-/data-root-dir is: /var/lib/docker/ #-to change it: systemctl stop docker ; [mkdircd /etc/docker/ ] ; vi /etc/docker/daemon.json #-: { "data-root": "/up1/mnt/VARAU2fs/varau2/docks1/images" }  ##--I-NO exfat/fat! NO-symlink/rel-path!  dockerd will set permissions! see:  https://wiki.archlinux.org/title/Docker#Images_location
 		 - if already some images in its folder there, for Relocating the Docker root directory: stop all docker-services; mv old to new dir; edit /etc/docker/daemon.json; restart them! see:   https://www.ibm.com/docs/en/z-logdata-analytics/5.1.0?topic=software-relocating-docker-root-directory
 		 -->  changed-to varau2 : /up1/media/VARAU2fs/varau2/docks1/images
 		 - check:  docker info | grep "Docker Root Dir"
@@ -88,7 +88,7 @@ clean up all unused volumes with docker volume prune
 	docker run --rm  -it --name alp1bash  --hostname  alp1bash  -v  /up1/varu/varau/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
 
 _______:  alp1-bash-image:
-##- it has no bach; so start it with sh :
+##- it has no bash; so start it with sh :
 docker run --rm  -it --name alp1bash  --hostname  alp1    alpine /bin/sh   ##--or without --rm , in case that you forget commit ...!?
 apk add bash vim python3  curl
 --- evv-profs (put on the share  /up1/varu/varau/docks1_var/share1):
