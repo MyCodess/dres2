@@ -1,0 +1,81 @@
+______________________________  Kubernetes / K8s 1coll....: _____________________________________
+- for kubectl cmd/cli see extra/own dnts here! here ONLY K8s-Allg-/-Concepts/...-dnts !
+
+#####  ==========  URLs/docs/helps/...:
+	- ! glossary:  https://kubernetes.io/docs/reference/glossary/?all=true
+	- https://kubernetes.io/
+	- Tuts:  https://kubernetes.io/docs/tutorials/
+##________________________________________  ___________________________
+
+
+#####  ==========  local-K8s-runners / tryouts-providers :
+	- kind ::       https://kind.sigs.k8s.io/	   --> for develops/CICD/... in docker-k8s! portable! mlti-node
+	- minikube  ::  https://minikube.sigs.k8s.io/  --> single-node, compact, runs everywhere ...
+	- K3s /Rancher  ::  https://k3s.io/            --> IoT / low-resources / ...
+	- vs.:  https://www.devzero.io/blog/minikube-vs-kind-vs-k3s
+##________________________________________  ___________________________
+
+
+
+#####  ==========  install + cerate/init/bootstrap a cluster with kubeadm on fedora43 /:251222  :
+_______:  fed install K8s:
+	- https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes/
+	- dnf list *kubern* ; rpm -qa | grepi kubern ;
+	- eg kubernetes 1.34 install: 
+	- dnf install kubernetes1.34 kubernetes1.34-kubeadm kubernetes1.34-client   ##-- kubernetes-systemd  usu. not req! The kubelet runs as a systemd service on Fedora.! see url above!
+	- sudo dnf install kubernetes1.34 kubernetes1.34-kubeadm kubernetes1.34-client
+	- systemctl status kubelet.service
+	- !! upgrading pkgs (changing of xx in 1.xx) then MUST first UNinstall the prev Ver  and then install the new one!! see doc above!
+
+_______:  kubelet confs:
+	- https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes-kubelet/
+	- confs/details see files in output of:  systemctl status kubelet.service  #-bzw:
+	- finds   /usr/lib/systemd/system/kubelet*   /etc/kubernetes/
+	- overwriting confs : mkdir /etc/systemd/system/kubelet.service.d/  #-and put user confs nn-xxx.conf there (MUST be .conf !), which overwrites the ones in /usr/lib/systemd/... !
+	- default-kubelet-conf:  /var/lib/kubelet/config.yaml  , user-modifs/overwrite:  see url above!
+
+_______:  create cluster (with kubeadmin on fed /:251223):
+	- https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes-kubeadm/
+	-! swap/zarm disable ! systemctl stop swap-create@zram0 ; dnf remove zram-generator-defaults ; reboot now ;
+	- SELinux disable ! prefere!
+	- firewalld stop during k8s running (or disable, but not good im Allg!):  sudo systemctl disable/stop --now firewalld
+	- ... see URL, BUT did NOT work with containerd ! had to install/enable cri-o and disable containerd to work !!
+	- !! but for pod run/create had to delete the cni0 nw-interface  : sudo ip link delete cni0 type bridge  ##-/OR: ip link set cni0 down; brctl delbr cni0   ##-- https://devops.stackexchange.com/questions/14891/cni0-already-has-an-ip-address
+		/OR:  ip link set cni0 down && ip link set flannel.1 down 2. ip link delete cni0 && ip link delete flannel.1 3. systemctl restart containerd && systemctl restart kubelet ##-- https://stackoverflow.com/questions/61373366/networkplugin-cni-failed-to-set-up-pod-xxxxx-network-failed-to-set-bridge-add
+		/bzw: ip link set cni0 down && ip link set flannel.1 down ; ip link delete cni0 && ip link delete flannel.1 ; systemctl restart docker && systemctl restart kubelet 
+##________________________________________  ___________________________
+
+
+#####  ==========  namespaces_dnts :
+_______:  CT ct.22.25.162-167--Kubernetes-Einstieg-Teil_3--Containervernetzer.pdf ::
+-! Der Namespace ist Teil des vollständigen Hostnames eines Service/pod/.... Ein Service namens my-service, der im Namespace default liegt, heißt mit vollem Namen my-service.default.svc.cluster.local !
+	Die Endung .svc.cluster.local wird als Standard-Domain for services angenommen und kann weggelassen werden.
+	Sucht ein Pod einen Service im selben Namespace, kann er auch diesen weglassen. Namespace-intern würde auch eine Anfrage für my-service zum Erfolg führen.
+- welche Pods darin in namespace xxx:   kubectl get pods -n  xxx
+- in allen namespaces suchen/abfragen for pods listing:   kubectl get pods/services/...  --all-namespaces    ##-ansonsten sucht nur in "default" namespace!
+- cu-default-namspace für die weiteren Befehle ändern:    kubectl config set-context --current --namespace=xxx
+##________________________________________  ___________________________
+
+
+#####  ==========  PODs_dnts:
+--- ! PODs internal NW:
+Pods that are running inside Kubernetes are running on a private, isolated network. By default they are visible from other pods and services within the same Kubernetes cluster, but not outside that network.  https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/
+The kubectl proxy command can create a proxy that will forward communications into the cluster-wide, private network. T
+By default, the Pod is ONLY accessible by its internal IP address within the Kubernetes cluster! otherwise have to create a SERVICE (expose --type=LoadBalancer ...) for it!  https://kubernetes.io/docs/tutorials/hello-minikube/#create-a-service
+expose --type=LoadBalancer flag indicates that you want to expose your Service outside of the cluster.
+-
+##________________________________________  ___________________________
+
+
+#####  ==========  deployments_dnts:
+- When we create a Deployment on Kubernetes, that Deployment creates Pods with containers inside them (as opposed to creating containers directly). 
+##________________________________________  ___________________________
+
+
+#####  ==========  Services_dnts:
+- ! https://kubernetes.io/docs/tutorials/kubernetes-basics/expose/expose-intro/
+- ClusterIP (default) <  NodePort  <  LoadBalancer  <  ExternalName (DNS)  ##--:see above URL!
+- 
+##________________________________________  ___________________________
+
+

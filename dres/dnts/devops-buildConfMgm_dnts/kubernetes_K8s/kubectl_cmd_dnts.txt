@@ -1,4 +1,6 @@
 _____________________ kubectl cmd dnts: _______________________________________________
+-! for ALL kubectl cmds here first set: export KUBECONFIG=my-kube.conf  /OR  kubectl --kubeconfig=./my-kube.conf
+	- check it with:  kubectl config view
 
 
 #####  ==========  URLs/helps/...:
@@ -9,13 +11,15 @@ _____________________ kubectl cmd dnts: ________________________________________
 ##________________________________________  ___________________________
 
 
-#####  ==========  confs:
-	man kubectl-config
+#####  ==========  confs of kubectl cmd:
+	- man kubectl-config
 	- configs ways by:
 		cmdline-arg  "kubectl --kubeconfig" (NO-merge-in! ignores the rest!)  >  
 			$KUBECONFIG (merging-of-path-entries) >
 				Otherwise, ${HOME}/.kube/config  (no merging;  (mswin:  %USERPROFILE%\.kube\config)
-	-! Flags that you specify from the command line override default values and any corresponding environment variables.
+	-! So, Flags that you specify from the command line override default values and any corresponding environment variables.
+	--- show cu configs,...
+	- ! kubectl config  view    ##-- man kubectl-config-view  :: show the current kubectl configuration !
 ##________________________________________  ___________________________
 
 
@@ -25,13 +29,29 @@ _____________________ kubectl cmd dnts: ________________________________________
 ##________________________________________  ___________________________
 
 
-#####  ==========  PODs:
-	kubectl describe pods
-	kubectl get pods -o wide -A
+#####  ==========  logs/monitor/check/events (check what has been happening in cluster,....):
+_______:  logs (PODs):
+	man kubectl-logs  ::  Print the logs for a container in a pod
+	kubectl logs <pod-name>
+
+_______:  events:
+	kubectl  get events
+
+_______:  describe :
+	kubectl  describe  <resource>
 ##________________________________________  ___________________________
 
 
-#####  ==========  tollouts/rollbacks/...
+#####  ==========  PODs:
+	kubectl describe pods   ##-/OR ... pod <pod1-name>
+	kubectl get pods -o wide -A
+	kubectl get pod example-pod1 example-pod2  -o wide
+	kubectl get pod/example-pod1 replicationcontroller/example-rc1
+	kubectl logs <pod-name>
+##________________________________________  ___________________________
+
+
+#####  ==========  rollouts/rollbacks/...
 	_______:  enforcing a rollout (new PODs! replacement of cu-pods with new ones):
 	- Trigger the rollout:  kubectl rollout restart deployment configmap-env-var
 	- Wait for the rollout to complete: kubectl rollout status deployment configmap-env-var --watch=true
@@ -39,11 +59,30 @@ _____________________ kubectl cmd dnts: ________________________________________
 ##________________________________________  ___________________________
 
 
+#####  ==========  auth:
+	kubectl auth whoami
+##________________________________________  ___________________________
+
+
+#####  ==========  terminal-connect /attach to POD:
+	kubectl  exec    -it pod1  -- /bin/bash
+	kubectl  attach  -it  pod1 ...  ##--!!- tty MUST be enbaled for pod1 by its deployment! otherwise: error: Unable to use a TTY - container ...
+##________________________________________  ___________________________
+
+
+#####  ==========  proxy:
+	kubectl proxy --port=9191
+##________________________________________  ___________________________
+
+
 
 ##################### qkys/shorties/...: ##############################################################
-_______:  
-kubectl  cluster-info [ dump ]
+_______:  OSs (not directly kubectl, but OS ...):
+systemctl status  docker.service  docker.socket  containerd.service  crio.service  kubelet.service
 
 _______:  
-kubectl  describe xxx
+	kubectl  cluster-info [ dump ]
+
+_______:  
+	kubectl  describe xxx
 

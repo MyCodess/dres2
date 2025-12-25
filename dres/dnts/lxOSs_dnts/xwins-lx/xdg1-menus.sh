@@ -22,18 +22,18 @@ export xdg1_data_syys_dirs="${XDG_DATA_DIRS:-/usr/local/share/:/usr/share/}"
 export xdg1_config_syys_dirs="${xdg1_config_syys_dirs//:/  }"    ##-replace colon with space to use it as parameter for find command!
 echo "=   xdg1_config_syys_dirs  are:  "  $xdg1_config_syys_dirs
 export  xdg1_config_all_dirs="$xdg1_config_home   $xdg1_config_syys_dirs"
-echo "=== xdg1_config_all_dirs  are:  "  $xdg1_config_all_dirs
+echo "=== xdg1_config_all_dirs   are:  "  $xdg1_config_all_dirs
 
 ##----- DATA-dirs of system + user/HOME:
 export xdg1_data_syys_dirs="${xdg1_data_syys_dirs//:/  }"    ##-replace colon with space to use it as parameter for find command!
 echo "=   xdg1_data_syys_dirs    are:  "  $xdg1_data_syys_dirs
 export  xdg1_data_all_dirs="$xdg1_data_home   $xdg1_data_syys_dirs"
-echo "=== xdg1_data_all_dirs    are:  "  $xdg1_data_all_dirs
+echo "=== xdg1_data_all_dirs     are:  "  $xdg1_data_all_dirs
 
 
 ##----- ALL-xdg-dirs:
 export xdg1_all_dirs="$xdg1_config_all_dirs  $xdg1_data_all_dirs"
-echo "=   xdg1_all_dirs         are:  "  $xdg1_all_dirs
+echo "=   xdg1_all_dirs          are:  "  $xdg1_all_dirs
 
 ##-  find $xdg1_all_dirs -iname "*${1}*"
 

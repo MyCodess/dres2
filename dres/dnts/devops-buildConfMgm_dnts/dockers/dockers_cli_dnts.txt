@@ -66,6 +66,7 @@ docker system prune --all --volumes  ::   Note: This command will delete everyth
 
 #####  ==========  containers-manage (show, kill, rm, attach, ...):
 docker ps -a ;
+docker logs <container-id>   ##--see man docker-logs
 docker attach <container> – Attach your terminal to the foreground process of the container with the ID or name <container> #-as:  docker attach alp1
 docker commit <container> new-image:latest – Save the current state of <container> to a new image called new-image:latest
 docker inspect <container> – Obtain all the information Docker holds about a container, in JSON format.
@@ -87,5 +88,13 @@ docker build .                            ##– Build the Dockerfile in your wor
 docker build -t example-image:latest .    ##– Build the Dockerfile in your working directory and tag the resulting image as example-image:latest.
 docker build -f docker/app-dockerfile     ##– Build the Dockerfile at the docker/app-dockerfile path.
 docker build --pull .                     ##– Instructs Docker to pull updated versions of the images referenced in FROM instructions in your Dockerfile, before building your new image.
+##________________________________________  ___________________________
+
+
+#####  ==========  HUB / docker-Repos :
+docker search archlinux   ##--search the hub for certain imaes !
+docker pull  <img>
+docker login -u <username>
+docker push <username>/<image_name>
 ##________________________________________  ___________________________
 
