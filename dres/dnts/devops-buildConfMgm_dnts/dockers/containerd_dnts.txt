@@ -1,0 +1,9 @@
+______________________________ containerd (mainly on fed ________________________________________
+
+
+
+#####  ==========  confs,...:
+	- conf in ::  /etc/containerd/config.toml   ##-: see there all other pathes,...
+	/var/lib/containerd/  :: images/....
+##________________________________________  ___________________________
+

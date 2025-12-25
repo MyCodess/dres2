@@ -34,6 +34,7 @@ _______:
 
 
 #####  ==========  links /interfaces :  man ip-link
+	- delete a link:   ip l delete vpn0
 	- add a new (dummy) link/interface (for trys,...) and assign addr to it (eg for trys/testies/...):
 		sudo ip link add eth31 type dummy ; sudo  ip l set  eth31 up ; sudo ip a add  10.167.126.24/21 dev eth31 ;
 	ip link show dev [device]  ##-- ip -d a show dev wlan0

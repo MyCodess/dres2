@@ -7,6 +7,7 @@
 _______:  
 netcat -l -p 8585 ;/OR  nc -l -p  8585      ##--Gnu-netcat here ! creates a server listening on port 8585 !   /usr/bin/nc -> ./netcat
 ncat -lk   8585       ##--is in nmap pkg ! is NOT nc !!
+ncat  127.0.0.1 6443 -zv -w 2  ##--checkOnly if port 6443 is open ...
 socket -sl 8585       ##--was in book-H.M., aber not available on arch !?!?
 - port-communication-test-exp (you see then messages like "talk" in both terminals):
 	on-pc1:  netcat -l -p 8585

@@ -1,8 +1,34 @@
 _______________________ trys2, on fedora /2512fed ... _______________________________________
 
 -!! trotz der docker-config, it saves images in /var/lib/containerd/
+
+
+#####  ==========  /:251216 :  GUI-apps running in docker/container : ust run container with:  -e DISPLAY ... #-as:
+docker run  --rm  -it --name arxbase1xfce1  -e DISPLAY --net=host --hostname arxxfce1 --name arxxfce1   arxbase1xfce:1  ##--and then call there eg: thunar / xfce4-terminal / ...
+
+#--- image done as:
+docker pull archlinux:latest   ##--: latest, base, base-20251214.0.467559
+	--> archlinux:latest       cbda7ef1fe67        733MB          175MB        
+	--> on fed, the backend is containerd, so it pulls/DWs it to /var/lib/containerd ...:
+docker run  -it --hostname arxbase1  --name arxbase1   cbda7ef1fe67  /bin/bash
+	[root@arxbase1 /]# pacman -Syu
+	[root@arxbase1 /]# pacman -Syu xfce4
+	- the container requires a machine-id for dbus/... 
+	- (the systemd-machine-id-setup did not work! systemdd stuf not working properly: System has not been booted with systemd as init system (PID 1). Can't operate...):
+	rm -f /etc/machine-id /var/lib/dbus/machine-id ; dbus-uuidgen --ensure=/etc/machine-id ; dbus-uuidgen --ensure ; ##-- https://wiki.debian.org/MachineId
+#- save now the running xfce4-container into an image:
+docker commit a15d06828181  arxbase1xfce:1
+##-if-req in host !?:   xhost  +  ##--/OR-stricter:  xhost +local:docker
+#- run a new container now with -e DISPLAY set/forwarded and strt a GUI:
+docker run  --rm  -it --name arxbase1xfce1  -e DISPLAY --net=host --hostname arxxfce1 --name arxxfce1   arxbase1xfce:1  ##--and then call there eg: thunar / xfce4-terminal / ...
+	[root@2512fed /]# thunar #- xfce4-terminal ...
+
+##________________________________________  ___________________________
+
+
 #####  ==========  /:251206 :  
-systemctl restart docker.service  docker.socket
+systemctl  restart   containerd.service  docker.service  docker.socket
+
 ##- it has no bash; so start it with sh :
 docker run --rm  -it --name alp1  --hostname  alp1    alpine:latest  /bin/sh   ##--or without --rm , in case that you forget commit ...!?
 
@@ -48,8 +74,29 @@ host$  docker run --rm -it --hostname arxdevel1  --name arxdevel1b   arxdevel1b 
 host$  docker commit   -m "xfce4-basis-added"  arxdevel1b  -->  17b5e836eb42ccab86e343d0861260600467cfb10341b1b55167dcfa873e194c
 	[root@arxdevel1 /]# useradd -m t1 ; su - t1 ; 
 host$  docker commit   -m "xfce4-basis-added--user-t1"  arxdevel1b  ##-->   sha256:b29937d52ac35bc1c81d1d6a17175483ecae72c33a6ff1a4ff7d5bd10350bbe9
-
-
-
 ##________________________________________  ___________________________
+
+
+#####  ==========  alp1-bash+evv __CP  (notes in /up1/varu/varau/docks1_var/0nts.txt) :
+- alp1-bash-evv-call with share (could also copy the evv to the image, so without host-share, but so ok!):
+	docker run --rm  -it --name alp1bash  --hostname  alp1bash  -v  /up1/varu/varau/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
+
+_______:  alp1-bash-image:
+##- it has no bash; so start it with sh :
+docker run --rm  -it --name alp1bash  --hostname  alp1    alpine /bin/sh   ##--or without --rm , in case that you forget commit ...!?
+apk add bash vim python3  curl
+--- evv-profs (put on the share  /up1/varu/varau/docks1_var/share1):
+cd /up1/varu/varau/docks1_var/share1/ ;  cp -a /up1/.cev  /up1/.cev . ; mkdir w1 prjs ; 
+cp  /etc/bash/bashrc /etc/bash/bashrc_1org
+vi /etc/bash/bashrc  ##--:  source  /mnt/host11/setevv_alp1.sh  ##--evv could be copied to the image, but so as share is ok!
+#-I- evv-for-alp1-bash--modifs:  only ls1 alias : no date-iso-arg ! (empty DIRs there as w1 , prj has to be created! in evv there are "cd ..." or realpath ... !)
+ln -s /mnt/host11/up1 /up1   ##--just to have same pathes, otherwise is ok also without ...
+docker commit alp1bash  alpine:bash1   ##-so save the status, BEFORE leaving the container, to alpine:bash1  !
+-! before leaving test the new image in another terminal with:
+docker run --rm  -it --name alp1bash_1  --hostname  alp1bash  -v  /up1/varu/varau/docks1_var/share1:/mnt/host11  alpine:bash1  /bin/bash
+--- in evv-profs all ok except:
+aliases : ls1 : does NOT have date-iso!
+vimrc :  commentout pathogen#infect
+##________________________________________  ___________________________
+
 

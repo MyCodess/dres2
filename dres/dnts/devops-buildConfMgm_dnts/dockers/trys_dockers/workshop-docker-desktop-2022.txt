@@ -1,0 +1,41 @@
+_______________ docker.com Video Workshop of Jun 22, 2022 ___________________________________
+- min: 43:00
+https://www.youtube.com/watch?v=gAGEar5HQoU
+
+• Intro and brief history of Docker
+• Getting started with Docker and Docker Desktop
+• Making and using containers
+• Taking advantage of Docker Hub to find Official Images
+• Persistent data with volumes
+• Multiple Docker containers at once with Docker Compose
+• Deploying containers to the cloud
+• Quick peek at Docker Extensions
+
+_______:  installed docker-desktop 
+- by rpm on fed (had to uninstall all fed-docker stuff ...)
+(later will remove it!)
+...
+now have to start it to start docker-daemon! (no systemctl ...) !!
+/opt/docker-desktop/bin/docker-desktop  #--start daemon/server + GUI/client
+/opt/docker-desktop/Docker\ Desktop     #--GUI/client-only start
+
+_______:  
+docker run -p 80:80 docker/getting-started:latest
+docker pull fedora:latest 
+
+_______:  
+docker run fedora:latest echo 'Hi-there-1'
+docker logs   3d847dd8692b
+
+_______:  
+docker run -it fedora:latest   ##--withOUT --rm ! we want to reconnect/restart !
+	[root@b8a7a227323e /]# dnf install figlet #...
+	figlet kk #-ok
+	exit
+#- restart the stopped container, attach to it (-ai) and check if figlet still there:
+docker start -ai b8a7a227323e
+	figlet kk #-ok
+
+_______:  
+
+

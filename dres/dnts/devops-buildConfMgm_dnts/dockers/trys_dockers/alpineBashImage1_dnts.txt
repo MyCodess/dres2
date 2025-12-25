@@ -24,6 +24,7 @@ cp ./setevv_alp1.sh  ./share1/up1/ ;
 #-I- evv-for-alp1-bash--modifs:
 	only ls1 alias : no date-iso-arg ! (empty DIRs there as w1 , prj has to be created! in evv there are "cd ..." or realpath ... !)
 	vi vimrc  #-commentout pathogen#infect
+-->?? commit required !?!?
 
 --- build+run the image:
 docker build  -t alpine:bash2  .
