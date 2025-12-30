@@ -1,0 +1,16 @@
+##__  https://platform-docs.bare.pandrosion.org/kubernetes/user/guides/cluster-usage/deploy-workloads/overview  ::
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alp1
+  labels:
+    app: alp1
+spec:
+  containers:
+    - name: alp1-c1
+      image: alpine:latest
+      ##__  image: harbor.bare.pandrosion.org/ci-images/alpine:latest
+      tty: true
+      stdin: true
+      ##__NOT-wkd:   image: ubuntu:latest
+

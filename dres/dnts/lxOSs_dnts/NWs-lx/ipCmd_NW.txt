@@ -19,7 +19,7 @@ _______:  Allg-nts:
 #####  ==========  formatting/output of all: (see man ip)
 _______:  
 	-!  "-c" for color/pretty listing, as :  ip -c   a/l/r/n ;  /OR:  ip -c=always//auto/never ...
-	-!  "-br" :  TAB/table-formatted, short , as:  ip -c  -br a/l
+	-!  "-br" :  TAB/table-formatted, short , as:  ip -c  -br a/l ;  #-addr-short-table:  ip -br  addr
 	-!  "-d"  : more details output
 	-!  "-r"  : hostnames instead IPs, eg by ip -r -c addr
 	-  "-j -p" : json-output and Prettyi-json-formatting !

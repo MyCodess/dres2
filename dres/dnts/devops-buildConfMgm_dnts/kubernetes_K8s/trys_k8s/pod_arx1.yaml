@@ -1,0 +1,14 @@
+##__  https://platform-docs.bare.pandrosion.org/kubernetes/user/guides/cluster-usage/deploy-workloads/overview  ::
+apiVersion: v1
+kind: Pod
+metadata:
+  name: arx1
+  labels:
+    app: arx1
+spec:
+  containers:
+    - name: arx1-c1
+      image: archlinux:latest
+      tty: true
+      stdin: true
+

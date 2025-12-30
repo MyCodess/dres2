@@ -1,0 +1,63 @@
+
+
+#####  ==========  /:251210 :  1try  https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/ /fed1 :
+systemctl start docker.service  docker.socket
+
+#---
+/up1/varu/varau/wks/k8s_wk
+k8s_wk : afg kube
+alias kl='kubectl'
+alias mk1='MINIKUBE_HOME=${q_minikubehome1}  minikube'
+
+#---
+mk1 stop
+mk1 delete --all=true --purge=true
+mk1 start
+
+#---
+- get sure kubectl is configured for minikube:
+cat  ~/.kube/config 
+kl  version
+
+#---
+kubectl get deployments.apps   -o wide
+kubectl get svc
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+kubectl get svc
+
+#--
+- terminal-login into a pod:
+kubectl  exec -it kubernetes-bootcamp-658f6cbd58-45vh8 -- /bin/bash ; curl http://localhost:8080 ;
+
+#--
+- update its label:
+kubectl label pods kubernetes-bootcamp-658f6cbd58-45vh8  version=v11
+- request pods labeled with v11:
+kubectl get pods -l  version=v11
+kubectl get svc -o wide
+- delete a service by its label:
+kubectl delete service -l app=kubernetes-bootcamp
+kubectl get svc -o wide 
+
+#--
+kubectl label pods  --list
+kubectl label pod kubernetes-bootcamp-658f6cbd58-45vh8   --list=true
+
+#-- scaling ...:
+kubectl scale deployments/kubernetes-bootcamp --replicas=4
+kubectl describe deployments/kubernetes-bootcamp
+kubectl describe services/kubernetes-bootcamp
+minikube ip  ##-get loadbalancer IP
+
+#-- updating / rollout / undo :  https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/  ::
+kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=docker.io/jocatalin/kubernetes-bootcamp:v2
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+curl  http://192.168.49.2:30146/
+kubectl rollout status deployments/kubernetes-bootcamp
+#- Roll back an update:
+kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
+# - UNDO the roll out (v10 does NOT exit, but v1 ! so revert it back to the latest/v2):
+kubectl rollout undo deployments/kubernetes-bootcamp
+
+##________________________________________  ___________________________
+

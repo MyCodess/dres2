@@ -1,0 +1,168 @@
+
+
+#####  ==========  /:251225 :  on Lenovo-T460s-ca1 (after uninstalling the ok-setup on lv13, which with new IP here did nor work anymore):
+-! based on https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes-kubeadm/  : works good/ok !
+	the other setups (NW, firewall .... were already done on Lv13)!
+...
+sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
+dnf install cri-o1.34  containernetworking-plugins
+dnf install kubernetes1.34  kubernetes1.34-client  kubernetes1.34-kubeadm
+systemctl enable --now crio
+kubeadm config images pull
+systemctl enable --now kubelet
+kubeadm init --pod-network-cidr=10.244.0.0/16
+
+---- log:
+: kubeadm init --pod-network-cidr=10.244.0.0/16
+I1225 18:48:45.143612   55443 version.go:260] remote version is much newer: v1.35.0; falling back to: stable-1.34
+[init] Using Kubernetes version: v1.34.3
+[preflight] Running pre-flight checks
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action beforehand using 'kubeadm config images pull'
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+[certs] Generating "ca" certificate and key
+[certs] Generating "apiserver" certificate and key
+[certs] apiserver serving cert is signed for DNS names [2512fed kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.212.82]
+[certs] Generating "apiserver-kubelet-client" certificate and key
+[certs] Generating "front-proxy-ca" certificate and key
+[certs] Generating "front-proxy-client" certificate and key
+[certs] Generating "etcd/ca" certificate and key
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [2512fed localhost] and IPs [192.168.212.82 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [2512fed localhost] and IPs [192.168.212.82 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+[kubeconfig] Writing "admin.conf" kubeconfig file
+[kubeconfig] Writing "super-admin.conf" kubeconfig file
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/instance-config.yaml"
+[patches] Applied patch of type "application/strategic-merge-patch+json" to target "kubeletconfiguration"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests"
+[kubelet-check] Waiting for a healthy kubelet at http://127.0.0.1:10248/healthz. This can take up to 4m0s
+[kubelet-check] The kubelet is healthy after 503.978822ms
+[control-plane-check] Waiting for healthy control plane components. This can take up to 4m0s
+[control-plane-check] Checking kube-apiserver at https://192.168.212.82:6443/livez
+[control-plane-check] Checking kube-controller-manager at https://127.0.0.1:10257/healthz
+[control-plane-check] Checking kube-scheduler at https://127.0.0.1:10259/livez
+[control-plane-check] kube-controller-manager is healthy after 1.870152402s
+[control-plane-check] kube-scheduler is healthy after 3.055771268s
+[control-plane-check] kube-apiserver is healthy after 47.001967804s
+[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+[kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
+[upload-certs] Skipping phase. Please see --upload-certs
+[mark-control-plane] Marking the node 2512fed as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
+[mark-control-plane] Marking the node 2512fed as control-plane by adding the taints [node-role.kubernetes.io/control-plane:NoSchedule]
+[bootstrap-token] Using token: sfzi4m.4gcks96z6ywmjrif
+[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to get nodes
+[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstrap-token] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstrap-token] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 192.168.212.82:6443 --token sfzi4m.4gcks96z6ywmjrif \
+	--discovery-token-ca-cert-hash sha256:01ff16c52606cf81a714515f1d9daf69230be980cefe68845b7c546f05dc527e 
+----
+
+ss -np | grepi 6443   ##--cluster-api-server is running on 6443 !?
+sudo  cp -a /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-  ##-:  node/2512fed untainted
+kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+
+#--: At this point there is a single machine in the cluster running the control plane and available for work as a node. ::
+kubectl get pods --all-namespaces
+NAMESPACE      NAME                              READY   STATUS             RESTARTS         AGE
+kube-flannel   kube-flannel-ds-xff64             1/1     Running            0                4m10s
+kube-system    coredns-66bc5c9577-kcbr9          1/1     Running            0                22m
+kube-system    coredns-66bc5c9577-mhdb7          1/1     Running            0                22m
+kube-system    etcd-2512fed                      1/1     Running            0                24m
+kube-system    kube-apiserver-2512fed            1/1     Running            0                24m
+kube-system    kube-controller-manager-2512fed   0/1     CrashLoopBackOff   99 (3m10s ago)   24m
+kube-system    kube-proxy-k4mhx                  1/1     Running            0                22m
+kube-system    kube-scheduler-2512fed            0/1     CrashLoopBackOff   96 (116s ago)    24m
+
+#--: Troubleshooting CrashLoopBackOff  : see URl there! :
+-find your DNS-server:  resolvectl  (check its output for your interface now! usu. the router)
+kubectl edit configmap coredns -n kube-system   ##--:   replace forward . /etc/resolv.conf with the IP address of the DNS server for your network,as "forward . 192.168.212.1"
+- obv. can not restart system-pods; so delete them and they will be re-created:
+kubectl delete pod  kube-scheduler-2512fed -n  kube-system
+pod "kube-scheduler-2512fed" deleted from kube-system namespace
+kubectl get pods --all-namespaces
+NAMESPACE      NAME                              READY   STATUS             RESTARTS          AGE
+kube-flannel   kube-flannel-ds-xff64             1/1     Running            0                 27m
+kube-system    coredns-66bc5c9577-kcbr9          1/1     Running            0                 46m
+kube-system    coredns-66bc5c9577-mhdb7          1/1     Running            0                 46m
+kube-system    etcd-2512fed                      1/1     Running            0                 48m
+kube-system    kube-apiserver-2512fed            1/1     Running            0                 48m
+kube-system    kube-controller-manager-2512fed   0/1     CrashLoopBackOff   102 (4m ago)      47m
+kube-system    kube-proxy-k4mhx                  1/1     Running            0                 46m
+kube-system    kube-scheduler-2512fed            1/1     Running            100 (6m14s ago)   17s
+...
+
+-!! thye could NOT restart properly, till docker-services were restarted!!:
+systemctl restart  docker.service   docker.socket
+
+--- add a user POD:
+kubectl  run fed1 --image=fedora:latest  --restart=Never  ##--> did NOT work so !?! per cmdline! but with yaml-file then ok! 
+--
+kubectl get pods --all-namespaces -o wide
+kubectl  apply -f /up1/prjs/ofc3/dnts1/clusters1-clis1/nzerok8s/pod_alp1.yaml  ##--> ok! enve if it waf from ofc3-harbor (without VPN and not in ofc3-wlan!!)
+kubectl  exec -it alp1 -- bash  ##--OK!  then: apk add bash; ...
+-
+kubectl apply -f ./pod_fed1.yaml  ##--ok!
+kubectl  exec -it fed1 -- /bin/bash
+	root@fed1 /]# dnf install iproute traceroute  ##--for ip/trace/.... !  obv. ping-pkg /iputils  not allowd !? or only fedora does not allow it !? 
+
+--- in cab1-WLAN5--on-NB_T460s_ThinkPad_Lenovo--90eu :
+kubectl  get pods -o wide  --all-namespaces 
+NAMESPACE      NAME                              READY   STATUS    RESTARTS          AGE   IP               NODE      NOMINATED NODE   READINESS GATES
+default        alp1                              1/1     Running   2                 11h   10.244.0.85      2512fed   <none>           <none>
+default        fed1                              1/1     Running   2                 11h   10.244.0.84      2512fed   <none>           <none>
+kube-flannel   kube-flannel-ds-k8w7d             1/1     Running   2                 12h   192.168.212.82   2512fed   <none>           <none>
+kube-system    coredns-66bc5c9577-87p4r          1/1     Running   2                 12h   10.244.0.83      2512fed   <none>           <none>
+kube-system    coredns-66bc5c9577-xf46l          1/1     Running   2                 12h   10.244.0.86      2512fed   <none>           <none>
+kube-system    etcd-2512fed                      1/1     Running   4                 12h   192.168.212.82   2512fed   <none>           <none>
+kube-system    kube-apiserver-2512fed            1/1     Running   4                 12h   192.168.212.82   2512fed   <none>           <none>
+kube-system    kube-controller-manager-2512fed   1/1     Running   183 (2m47s ago)   12h   192.168.212.82   2512fed   <none>           <none>
+kube-system    kube-proxy-cvcdq                  1/1     Running   2                 12h   192.168.212.82   2512fed   <none>           <none>
+kube-system    kube-scheduler-2512fed            1/1     Running   180 (2m21s ago)   12h   192.168.212.82   2512fed   <none>           <none>
+---
+
+##________________________________________  ___________________________
+

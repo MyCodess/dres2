@@ -1,0 +1,213 @@
+
+
+#####  ==========  /:251226 :  
+#####  ==========   ========== ========== 20251226-204330 : =====================__________ pre installs/runs/...:
+up1/varu/varau/wks/k8s_wk
+k8s_wk : ip l
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp0s31f6: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN mode DEFAULT group default qlen 1000
+    link/ether 50:7b:9d:c3:10:81 brd ff:ff:ff:ff:ff:ff
+    altname enx507b9dc31081
+3: wwp0s20f0u2i12: <BROADCAST,MULTICAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether 1e:a6:6a:83:59:1d brd ff:ff:ff:ff:ff:ff
+4: wlp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DORMANT group default qlen 1000
+    link/ether 8a:4e:61:3d:62:12 brd ff:ff:ff:ff:ff:ff permaddr 44:85:00:3c:01:f9
+    altname wlx4485003c01f9
+
+/up1/varu/varau/wks/k8s_wk
+*k8s_wk : ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp0s31f6: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 50:7b:9d:c3:10:81 brd ff:ff:ff:ff:ff:ff
+    altname enx507b9dc31081
+3: wwp0s20f0u2i12: <BROADCAST,MULTICAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 1e:a6:6a:83:59:1d brd ff:ff:ff:ff:ff:ff
+4: wlp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 8a:4e:61:3d:62:12 brd ff:ff:ff:ff:ff:ff permaddr 44:85:00:3c:01:f9
+    altname wlx4485003c01f9
+    inet 192.168.212.82/24 brd 192.168.212.255 scope global dynamic noprefixroute wlp4s0
+       valid_lft 42842sec preferred_lft 42842sec
+    inet6 fe80::b8bc:8363:427f:2e51/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+
+
+##________________________________________  ___________________________
+
+
+
+#####  ==========  /:251226 :  
+k8svar : kind create cluster
+Creating cluster "kind" ...
+ ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+ ✓ Preparing nodes 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+Set kubectl context to "kind-kind"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind
+
+Have a nice day! 👋
+
+/up1/varu/varau/dvl1var/k8svar
+k8svar : kubectl cluster-info --context kind-kind
+Kubernetes control plane is running at https://127.0.0.1:34197
+CoreDNS is running at https://127.0.0.1:34197/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+###________________________________________  ___________________________
+
+
+#####  ==========  /:251226 :  
+#####  ==========   ========== ========== 20251226-223500 : =====================__________ pos-installs/runs/...:
+/up1/varu/varau/wks/k8s_wk
+k8s_wk : ip l
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp0s31f6: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN mode DEFAULT group default qlen 1000
+    link/ether 50:7b:9d:c3:10:81 brd ff:ff:ff:ff:ff:ff
+    altname enx507b9dc31081
+3: wwp0s20f0u2i12: <BROADCAST,MULTICAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether 1e:a6:6a:83:59:1d brd ff:ff:ff:ff:ff:ff
+4: wlp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DORMANT group default qlen 1000
+    link/ether 8a:4e:61:3d:62:12 brd ff:ff:ff:ff:ff:ff permaddr 44:85:00:3c:01:f9
+    altname wlx4485003c01f9
+5: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN mode DEFAULT group default 
+    link/ether 6e:da:5e:d1:40:69 brd ff:ff:ff:ff:ff:ff
+6: br-c22e07c2b902: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default 
+    link/ether 72:5a:b8:9f:1f:e9 brd ff:ff:ff:ff:ff:ff
+9: vethe64154d@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-c22e07c2b902 state UP mode DEFAULT group default 
+    link/ether fe:35:e6:42:4d:e0 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+
+/up1/varu/varau/wks/k8s_wk
+k8s_wk : ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp0s31f6: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 50:7b:9d:c3:10:81 brd ff:ff:ff:ff:ff:ff
+    altname enx507b9dc31081
+3: wwp0s20f0u2i12: <BROADCAST,MULTICAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 1e:a6:6a:83:59:1d brd ff:ff:ff:ff:ff:ff
+4: wlp4s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 8a:4e:61:3d:62:12 brd ff:ff:ff:ff:ff:ff permaddr 44:85:00:3c:01:f9
+    altname wlx4485003c01f9
+    inet 192.168.212.82/24 brd 192.168.212.255 scope global dynamic noprefixroute wlp4s0
+       valid_lft 36042sec preferred_lft 36042sec
+    inet6 fe80::b8bc:8363:427f:2e51/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+5: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 6e:da:5e:d1:40:69 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+6: br-c22e07c2b902: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 72:5a:b8:9f:1f:e9 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-c22e07c2b902
+       valid_lft forever preferred_lft forever
+    inet6 fc00:f853:ccd:e793::1/64 scope global nodad 
+       valid_lft forever preferred_lft forever
+    inet6 fe80::705a:b8ff:fe9f:1fe9/64 scope link proto kernel_ll 
+       valid_lft forever preferred_lft forever
+9: vethe64154d@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-c22e07c2b902 state UP group default 
+    link/ether fe:35:e6:42:4d:e0 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::fc35:e6ff:fe42:4de0/64 scope link proto kernel_ll 
+       valid_lft forever preferred_lft forever
+
+/up1/varu/varau/wks/k8s_wk
+k8s_wk : ip r
+default via 192.168.212.1 dev wlp4s0 proto dhcp src 192.168.212.82 metric 600 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+172.18.0.0/16 dev br-c22e07c2b902 proto kernel scope link src 172.18.0.1 
+192.168.212.0/24 dev wlp4s0 proto kernel scope link src 192.168.212.82 metric 600 
+###________________________________________  ___________________________
+#
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; preset: disabled)
+    Drop-In: /usr/lib/systemd/system/service.d
+             └─10-timeout-abort.conf
+     Active: active (running) since Fri 2025-12-26 21:58:30 CET; 52min ago
+ Invocation: beb60fc73f7f4f48b301a1d9e5235433
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 11721 (dockerd)
+      Tasks: 21
+     Memory: 477.9M (peak: 545.7M)
+        CPU: 27.046s
+     CGroup: /system.slice/docker.service
+             ├─11721 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --selinux-enabled --userland-proxy-path /usr/bin/docker-proxy --init-path /usr/bin/tini-static
+             └─16481 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 34197 -container-ip 172.18.0.2 -container-port 6443 -use-listen-fd
+
+Dec 26 21:58:30 2512fed dockerd[11721]: time="2025-12-26T21:58:30.905920986+01:00" level=info msg="API listen on /run/docker.sock"
+Dec 26 21:58:30 2512fed systemd[1]: Started docker.service - Docker Application Container Engine.
+Dec 26 22:01:27 2512fed dockerd[11721]: time="2025-12-26T22:01:27.299500335+01:00" level=info msg="image pulled" digest="sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a" remote="docker.io/kindest/node@sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a"
+Dec 26 22:03:43 2512fed dockerd[11721]: time="2025-12-26T22:03:43.426072759+01:00" level=info msg="Skipping check for route to send NA, EMSGSIZE" eid=e3e53ae272f1 ep=kind-control-plane net=kind nid=c22e07c2b902
+Dec 26 22:03:43 2512fed dockerd[11721]: time="2025-12-26T22:03:43.500015620+01:00" level=info msg="sbJoin: gwep4 ''->'e3e53ae272f1', gwep6 ''->'e3e53ae272f1'" eid=e3e53ae272f1 ep=kind-control-plane net=kind nid=c22e07c2b902
+Dec 26 22:08:09 2512fed dockerd[11721]: time="2025-12-26T22:08:09.948368969+01:00" level=info msg="ignoring event" container=5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+Dec 26 22:08:09 2512fed dockerd[11721]: time="2025-12-26T22:08:09.964955926+01:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d daemonShuttingDown=false error="restart canceled" execDuration=4m27.039950282s exitStatus="{137 2025-12-26 21:08:09.915344012 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Dec 26 22:08:10 2512fed dockerd[11721]: time="2025-12-26T22:08:10.913707522+01:00" level=warning msg="Container failed to exit within 10s of kill - trying direct SIGKILL" container=5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d error="context deadline exceeded"
+Dec 26 22:21:39 2512fed dockerd[11721]: time="2025-12-26T22:21:39.568153250+01:00" level=info msg="Skipping check for route to send NA, EMSGSIZE" eid=f2c51bae4335 ep=kind-control-plane net=kind nid=c22e07c2b902
+Dec 26 22:21:39 2512fed dockerd[11721]: time="2025-12-26T22:21:39.646022213+01:00" level=info msg="sbJoin: gwep4 ''->'f2c51bae4335', gwep6 ''->'f2c51bae4335'" eid=f2c51bae4335 ep=kind-control-plane net=kind nid=c22e07c2b902
+
+● docker.socket - Docker Socket for the API
+     Loaded: loaded (/usr/lib/systemd/system/docker.socket; enabled; preset: enabled)
+     Active: active (running) since Fri 2025-12-26 21:58:13 CET; 53min ago
+ Invocation: aaa553e5afc741678465c6e08341ffc9
+   Triggers: ● docker.service
+     Listen: /run/docker.sock (Stream)
+      Tasks: 0 (limit: 9170)
+     Memory: 0B (peak: 256K)
+        CPU: 2ms
+     CGroup: /system.slice/docker.socket
+
+Dec 26 21:58:13 2512fed systemd[1]: docker.socket: Deactivated successfully.
+Dec 26 21:58:13 2512fed systemd[1]: Closed docker.socket - Docker Socket for the API.
+Dec 26 21:58:13 2512fed systemd[1]: Stopping docker.socket - Docker Socket for the API...
+Dec 26 21:58:13 2512fed systemd[1]: Starting docker.socket - Docker Socket for the API...
+Dec 26 21:58:13 2512fed systemd[1]: Listening on docker.socket - Docker Socket for the API.
+
+● containerd.service - containerd container runtime
+     Loaded: loaded (/usr/lib/systemd/system/containerd.service; disabled; preset: disabled)
+    Drop-In: /usr/lib/systemd/system/service.d
+             └─10-timeout-abort.conf
+     Active: active (running) since Fri 2025-12-26 21:58:14 CET; 53min ago
+ Invocation: d02851adcb314508a7b87758e20023d0
+       Docs: https://containerd.io
+   Main PID: 11695 (containerd)
+      Tasks: 24
+     Memory: 1.2G (peak: 1.3G)
+        CPU: 40.604s
+     CGroup: /system.slice/containerd.service
+             ├─11695 /usr/bin/containerd
+             └─16418 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 44939ecdbacd9e331e711ceb554bfab626f63f2b8407c54a32e16d00fab68a85 -address /run/containerd/containerd.sock
+
+Dec 26 21:58:14 2512fed containerd[11695]: time="2025-12-26T21:58:14.141950762+01:00" level=info msg="runtime interface starting up..."
+Dec 26 21:58:14 2512fed containerd[11695]: time="2025-12-26T21:58:14.142030858+01:00" level=info msg="starting plugins..."
+Dec 26 21:58:14 2512fed containerd[11695]: time="2025-12-26T21:58:14.142095958+01:00" level=info msg="Synchronizing NRI (plugin) with current runtime state"
+Dec 26 21:58:14 2512fed systemd[1]: Started containerd.service - containerd container runtime.
+Dec 26 21:58:14 2512fed containerd[11695]: time="2025-12-26T21:58:14.144141269+01:00" level=info msg="containerd successfully booted in 0.174234s"
+Dec 26 22:03:42 2512fed containerd[11695]: time="2025-12-26T22:03:42.987950359+01:00" level=info msg="connecting to shim 5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d" address="unix:///run/containerd/s/dce711170e52dd2b45b964ead339fb5760e762518e1045f8d5ec51c8ee3f56a3" namespace=moby protocol=ttrpc version=3
+Dec 26 22:08:09 2512fed containerd[11695]: time="2025-12-26T22:08:09.948565560+01:00" level=info msg="shim disconnected" id=5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d namespace=moby
+Dec 26 22:08:09 2512fed containerd[11695]: time="2025-12-26T22:08:09.948600310+01:00" level=info msg="cleaning up after shim disconnected" id=5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d namespace=moby
+Dec 26 22:08:09 2512fed containerd[11695]: time="2025-12-26T22:08:09.948616865+01:00" level=info msg="cleaning up dead shim" id=5459c34ae04ed25319cd2fc4e6fea05649951947516581fa6a8286ff9957960d namespace=moby
+Dec 26 22:21:39 2512fed containerd[11695]: time="2025-12-26T22:21:39.173249651+01:00" level=info msg="connecting to shim 44939ecdbacd9e331e711ceb554bfab626f63f2b8407c54a32e16d00fab68a85" address="unix:///run/containerd/s/f9232fbd2689004d99f13d898afec3f38c0b710cf7e4bd281db64b08445396b0" namespace=moby protocol=ttrpc version=3
+
+○ kubelet.service - Kubelet: The Kubernetes Node Agent
+     Loaded: loaded (/usr/lib/systemd/system/kubelet.service; disabled; preset: disabled)
+    Drop-In: /usr/lib/systemd/system/kubelet.service.d
+             └─10-kubeadm.conf
+             /usr/lib/systemd/system/service.d
+             └─10-timeout-abort.conf
+     Active: inactive (dead)
+       Docs: https://kubernetes.io/docs/concepts/overview/components/#kubelet
+             https://kubernetes.io/docs/reference/generated/kubelet/

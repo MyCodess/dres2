@@ -1,0 +1,84 @@
+
+
+#####  ==========  /:251226 :  
+dnf install moby-engine  ##--docker stuff is req by KIND!
+dnf install kubernetes1.34*
+dnf install kind
+---
+mvde .kube/config   ##--move/remove old/prev kubeconfigs
+systemctl restart  docker.service  docker.socket
+kind version   ##---> kind v0.30.0 go1.25.4 X:nodwarf5 linux/amd64
+---
+kind create cluster
+---
+kubectl cluster-info --context kind-kind
+cpde  ~/.kube/config  ~/.kube/  kind1_ok
+---
+k8s_wk : kubectl  get pods -o wide  --all-namespaces
+NAMESPACE            NAME                                         READY   STATUS             RESTARTS      AGE     IP           NODE                 NOMINATED NODE   READINESS GATES
+kube-system          coredns-66bc5c9577-kcf97                     1/1     Running            1             8m33s   10.244.0.4   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-ssjlc                     1/1     Running            1             8m33s   10.244.0.2   kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running            1             8m39s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kindnet-v5gz4                                1/1     Running            0             8m33s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running            1             8m39s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   0/1     CrashLoopBackOff   5 (26s ago)   8m39s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-proxy-c6k29                             1/1     Running            0             8m33s   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            0/1     CrashLoopBackOff   6 (25s ago)   8m39s   172.18.0.2   kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-7b8c8ddbd6-6lb2z      1/1     Running            0             8m33s   10.244.0.3   kind-control-plane   <none>           <none>
+---
+/up1/varu/varau/wks/k8s_wk
+kubectl  apply -f pod_alp1.yaml  ##--> pod/alp1 created
+kubectl  get pods -o wide  --all-namespaces
+NAMESPACE            NAME                                         READY   STATUS             RESTARTS         AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+default              alp1                                         1/1     Running            0                12m   10.244.0.5   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-kcf97                     1/1     Running            1                50m   10.244.0.4   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-ssjlc                     1/1     Running            1                50m   10.244.0.2   kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running            1                50m   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kindnet-v5gz4                                1/1     Running            0                50m   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running            1                50m   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   0/1     CrashLoopBackOff   12 (3m23s ago)   50m   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-proxy-c6k29                             1/1     Running            0                50m   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            0/1     CrashLoopBackOff   13 (3m18s ago)   50m   172.18.0.2   kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-7b8c8ddbd6-6lb2z      1/1     Running            0                50m   10.244.0.3   kind-control-plane   <none>           <none>
+---
+kubectl  exec -it alp1 -- sh
+/ # uname -a
+Linux alp1 6.17.12-300.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Dec 13 05:06:24 UTC 2025 x86_64 Linux
+/ # apk add bas
+/ # apk add iputils
+/ # ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=17.2 ms
+/ # ip l
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0@if6: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether d2:69:df:23:8b:41 brd ff:ff:ff:ff:ff:ff
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if6: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether d2:69:df:23:8b:41 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.5/24 brd 10.244.0.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::d069:dfff:fe23:8b41/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip r
+default via 10.244.0.1 dev eth0
+10.244.0.0/24 via 10.244.0.1 dev eth0  src 10.244.0.5
+10.244.0.1 dev eth0 scope link  src 10.244.0.5
+---
+/ # ping 172.18.0.2  ##--> also im POD kann den Node anpingen!:
+PING 172.18.0.2 (172.18.0.2) 56(84) bytes of data.
+64 bytes from 172.18.0.2: icmp_seq=1 ttl=64 time=0.373 ms
+---
+/ # traceroute 192.168.212.82   ##--> also POD kann host-OS/2512fed  anpingen! :
+traceroute to 192.168.212.82 (192.168.212.82), 30 hops max, 46 byte packets
+ 1  10.244.0.1 (10.244.0.1)  0.026 ms  0.025 ms  0.020 ms
+ 2  2512fed (192.168.212.82)  0.032 ms  0.021 ms  0.020 ms
+##________________________________________  ___________________________
+
