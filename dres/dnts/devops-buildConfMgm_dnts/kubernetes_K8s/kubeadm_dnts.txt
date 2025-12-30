@@ -1,0 +1,50 @@
+______________________________  kubeadm cluster setup ... _______________________________________
+-! REF (ok/worked eher):  https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes-kubeadm/  ::
+
+
+#####  ==========  install + create/init/bootstrap a cluster with kubeadm on fedora43 /:251222  :
+_______:  fed install K8s:
+	- https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes/
+	-! finally req were for kubeadm-cluster only:  crio.service  kubelet.service ,and better uninstall others! so:
+		dnf remove containerd docker*  ##-or at least disble all !
+		dnf install cri-o1.34*  kubernetes1.34* ; 
+	- dnf list *kubern* ; rpm -qa | grepi kubern ;
+	- eg kubernetes 1.34 install: 
+	- dnf install kubernetes1.34 kubernetes1.34-kubeadm kubernetes1.34-client   ##-- kubernetes-systemd  usu. not req! The kubelet runs as a systemd service on Fedora.! see url above!
+	- sudo dnf install kubernetes1.34 kubernetes1.34-kubeadm kubernetes1.34-client
+	- systemctl status kubelet.service
+	- !! upgrading pkgs (changing of xx in 1.xx) then MUST first UNinstall the prev Ver  and then install the new one!! see doc above!
+
+_______:  kubelet confs:
+	- https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes-kubelet/
+	- confs/details see files in output of:  systemctl status kubelet.service  #-bzw:
+	- finds   /usr/lib/systemd/system/kubelet*   /etc/kubernetes/
+	- overwriting confs : mkdir /etc/systemd/system/kubelet.service.d/  #-and put user confs nn-xxx.conf there (MUST be .conf !), which overwrites the ones in /usr/lib/systemd/... !
+	- default-kubelet-conf:  /var/lib/kubelet/config.yaml  , user-modifs/overwrite:  see url above!
+
+_______:  create cluster (with kubeadmin on fed /:251223):
+	- https://docs.fedoraproject.org/en-US/quick-docs/using-kubernetes-kubeadm/
+	-! swap/zarm disable ! systemctl stop swap-create@zram0 ; dnf remove zram-generator-defaults ; reboot now ;
+	- SELinux disable ! prefere!
+	- dnf remove containerd  docker...  #--works best with CRI-O ! and better it containerd .... NOT there!
+	- firewalld stop during k8s running (or disable, but not good im Allg!):  sudo systemctl disable/stop --now firewalld
+	- have to start/enable docker and CRI-O services + kubelet ... BUT NOT containerd (containerd could replace cri-o, but did not work!)
+		systemctl  disable --now  containerd.service 
+		systemctl  enable  --now  docker.service  docker.socket crio.service crio-wipe.service  kubelet.service
+	- !! but for pod run/create had to delete the cni0 nw-interface  : sudo ip link delete cni0 type bridge  ##-/OR: ip link set cni0 down; brctl delbr cni0   ##-- https://devops.stackexchange.com/questions/14891/cni0-already-has-an-ip-address
+		/OR:  ip link set cni0 down && ip link set flannel.1 down 2. ip link delete cni0 && ip link delete flannel.1 3. systemctl restart containerd && systemctl restart kubelet ##-- https://stackoverflow.com/questions/61373366/networkplugin-cni-failed-to-set-up-pod-xxxxx-network-failed-to-set-bridge-add
+		/bzw: ip link set cni0 down && ip link set flannel.1 down ; ip link delete cni0 && ip link delete flannel.1 ; systemctl restart docker && systemctl restart kubelet 
+	- creating PODs on simple cmdline, then pod did NOT start!; with xaml-file .. worked!
+##________________________________________  ___________________________
+
+
+############################## coll ######################################################
+_______:  kubeadm init ...:
+	check-all-containers-services:  systemctl  status  crio.service crio-wipe.service  kubelet.service  docker.service  docker.socket firewalld  containerd.service
+	systemctl  stop  containerd.service  firewalld ##-- NOT two container-providers! either CRI-O or containerd ! kubeadm/fed worked with CRI-O, but NOT with Containerd /:251225 !
+	systemctl  status  crio.service crio-wipe.service  kubelet.service   ##--req?:: docker.service  docker.socket 
+	systemctl  restart  crio.service 
+	kubeadm config images pull
+	sudo  nc -v -z 192.168.212.82  6443  -w2    ##--check if port 6443 is listening? adapt IP if-req!
+_______:  
+

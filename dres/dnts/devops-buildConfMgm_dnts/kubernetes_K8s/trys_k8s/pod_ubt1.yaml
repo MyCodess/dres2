@@ -1,0 +1,15 @@
+##__  https://platform-docs.bare.pandrosion.org/kubernetes/user/guides/cluster-usage/deploy-workloads/overview  ::
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubt1
+  labels:
+    app: ubt1
+spec:
+  containers:
+    - name: ubt1-c1
+      image: harbor.bare.pandrosion.org/vso/ubuntu:20.04
+      tty: true
+      stdin: true
+      ##__NOT-wkd:   image: ubuntu:latest
+

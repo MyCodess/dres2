@@ -1,0 +1,14 @@
+##__  https://platform-docs.bare.pandrosion.org/kubernetes/user/guides/cluster-usage/deploy-workloads/overview  ::
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fed1
+  labels:
+    app: fed1
+spec:
+  containers:
+    - name: fed1-c1
+      image: fedora:latest
+      tty: true
+      stdin: true
+

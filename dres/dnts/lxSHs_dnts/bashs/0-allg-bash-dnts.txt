@@ -22,6 +22,15 @@ _________ bash > 3.x _________________________________
 ##________________________________________  ___________________________
 
 
+
+#####  ==========  $* / "$*"  <--->  $@ / "$@" ::
+	- see man bash /^  *Special Parameters !A
+	-!! see here : argv1.bash ! here short:
+	-!! usu. you want "$@" , which is EXACT-user-argv to the script (space-sicher!) !
+	-!! not-enclosed: $* and $@ basically the same! space-in-one-arg NOT respected! (except if you reset IFS !)
+	-!! enclosed in ".." :  "$*" ALL args are just ONE-big-arg!  "$@" : exact-user-args and respect space in each arg if that arg is enclosed in "..." !
+##________________________________________  ___________________________
+
 #####  ==========  tips/misc-notes:
 -!! dot.sourcing and original-script-name-invoked??: ${BASH_SOURCE[0]}  #if surced, $0 is "bash",.. : see kk-script!
 -!!! value of var2 is the name for var3. you want the final/last value, so the value of var3:

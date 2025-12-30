@@ -1,0 +1,76 @@
+______________________________ dnf-dnts: ______________________________________________
+
+
+_______:  URLs/helps/....
+https://github.com/rpm-software-management/dnf5
+https://dnf.readthedocs.io/en/latest/command_ref.html
+dnf list -h
+
+_______:  configs/reposDirs/...:
+-! man dnf /^FILES  ::
+	Cache Files /var/cache/libdnf5/
+	Main Configuration /etc/dnf/dnf.conf
+	Repository Configuration /etc/yum.repos.d/
+	Repository Persistence /var/lib/dnf/
+	System State /usr/lib/sysimage/libdnf5/
+
+-! dnf  --dump-main-config      ##--show main config   ##---> ::
+	reposdir = /etc/yum.repos.d, /etc/distro.repos.d, /usr/share/dnf5/repos.d
+	system_cachedir = /var/cache/libdnf5
+	system_state_dir = /usr/lib/sysimage/libdnf5
+
+--- repos-list/modifs/...:
+- repos-listing:   dnf repolist --all
+- enable/disable a repo:  dnf config-manager --enable  <repo-name>
+- list-repos:   dnf repolist  [ --enabled --json ]  ##-- contents of:  /etc/yum.repos.d/ + ...
+- add-repo:     dnf config-manager addrepo [ --from-repofile https://xxx ]
+- enable-repo:  dnf config-manager setopt  <repositoryID>.enabled=1
+- disable-repo: dnf config-manager setopt  <repositoryID>.enabled=0
+- remove-repo (yum):  rm /etc/yum.repos.d/<file_name.repo>
+
+_______:  search pkgs/SWs/apps:
+- search in pkg Name/Summary or + descp with regexp ! see man dnf-search !
+- dnf search <app1>   ##-- supports regexp! eg:  dnf search "*html*text*"  #-for html2text eg
+
+_______:  querys/infs:
+- dnf info app1
+- files-listing-of-a-pkg:  rpm -ql app1
+- files-listing-of-a-remote-pkg:  dnf repoquery -l app1
+- which package owns this filepath / pacman -Qo ==  installed: rpm -qf filepath1   ; #/-all/remote:  dnf provides filepath1 ;
+
+_______:  listings:
+- lists of packages based on the provided parameters! see man dnf-list
+dnf list -h
+dnf list  [--all | --available | --installed | --extras | --updates | --upgrades | --autoremove | --recent]
+
+_______:  upgrade/updates  , pacman -Syu ...:
+dnf   check-upgrade		##--only listing/show! not really upgrading!
+dnf5  upgrade                ##-- man  dnf5-upgrade
+
+_______:  cleanings:
+dnf clean --help    ##--cache/pkgs/...  , pacman -Scc , ...
+dnf clean dbcache / expire-cache / packages / ...
+
+_______:  installed-pkgs:  pacman -Q ...
+rpm -qa   
+rpm -qa | grepi xxx   #-/OR:
+dnf list --installed  | sort  >pkgs-installed.log
+
+_______:  installing/updates/upgrades/uninstall/...:
+- dnf install <app1>
+- local-file-install:  dnf install ~/Downloads/example-1.0.0_1.rpm
+- source-dw:  dnf download --source  app1
+
+--- updates:
+- dnf  update [app1]
+
+--- UNinstalls/remove:
+- dnf remove app1
+
+
+##############################  pacman-equis :: ############################################################
+#####  ==========  pacman <---> dnf most usu. cmds:
+-!!  pacman <-->  dnf  :  https://wiki.archlinux.org/title/Pacman/Rosetta
+pacman -Ql 	==  rpm -ql xxx   #-OR:  dnf repoquery --installed  -l   xxx
+##________________________________________  ___________________________
+

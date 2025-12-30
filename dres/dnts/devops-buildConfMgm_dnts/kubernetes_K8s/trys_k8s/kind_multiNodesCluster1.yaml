@@ -1,0 +1,12 @@
+##--multi-nodes kind-cluster, see configs in ::  https://kind.sigs.k8s.io/docs/user/configuration/
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kind-multi-1
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+networking:
+  kubeProxyMode: "nftables"
+  podSubnet: "10.244.255.0/24"
+

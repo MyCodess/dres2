@@ -1,0 +1,107 @@
+______________________________ KIND to create local cluster K8s _________________________________
+
+_______:  URLs,...:
+	https://kind.sigs.k8s.io/docs/user/quick-start/
+	( https://betterstack.com/community/guides/scaling-docker/kind/ )
+
+_______:  install nts:
+	--- prereq:
+	requires docker installaion and existing kubectl cmd (so: cluster-client-cli ! eg from kubernetes1-client-pkg)!
+	kind runs a local Kubernetes cluster by using Docker containers as “nodes”
+
+	--- fed install:
+	--- prereq-fed:
+	- ! for fed-docker-install see extra dnts in docker_dnts-dir !!
+	dnf install  docker-cli + docker-engine (in fed:  moby-engine) +
+	ONE-container-runtime:  either containerd  /OR cri-o ! but NOT both/two! + 
+	kubectl in fed-pkg kubernetes1.xx-client  (in trys ALL three kubernetes1.xx-pkgs were instaled) ! better!  #-/OR if problems: directly from https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ by adding its own repo!
+	in fed the docker.service uses containerd as runtime-container! so activationg docker.service triggers containerd.service !
+	--- fed-install-kind-rpm:
+	dnf install kind   ##--could also dw kind.rpm from k8s.io, but fed-pkg-rpm better! matches the rest!
+	--- Troubleshooting Kind on fed:
+	- ! https://kind.sigs.k8s.io/docs/user/known-issues/#fedora :: firwalld , SELinux
+	--- 
+	- bash completion : not-req; works/dones by default,; but info:  kind completion bash  > /etc/bash_completion.d/kind_k8s.bash_completion  ##--but worked withOUT it !
+
+_______:  systemctl ...
+	- I disabled the services , to start them manualy! had to start docker (?: kubelet req? ist still disabled/not-running! and nodes are running ok ...!)
+	systemctl disable --now  containerd.service  crio.service  docker.service  docker.socket  firewalld.service  kubelet.service
+	systemctl restart docker.service  docker.socket  ###---> triggers also containerd.service as its container-runtime! (CRI-O is uninstalled! but could also work!?)
+	systemctl list-unit-files  -t service  | grepi -E 'container|crio|docker|firewall|kube|runc'  |sort  | sed 's@                 *@                @'  ##--shows if installed and enabaled/disabled ! omit -t xxx to see all: also devices/mounts/...
+	systemctl list-units -q --type=service | grepi -E 'container|crio|docker|firewall|kube|runc'  |sort  | sed 's@                 *@                @'   ##--shows if running now!
+	rpm -qf  /usr/bin/kubectl   ##--->  kubernetes1.34-client-1.34.3-1.fc43.x86_64
+	---
+	- nts: docker-drive-settings if-req:
+		- see::    see https://kind.sigs.k8s.io/docs/user/quick-start/#creating-a-cluster 
+		- AUTO detects docker installation ( docker, podman, or nerdctl ...) ! 
+		- AUTO-detection disable (so force him to cetain docker installation), eg set to docker:  export KIND_EXPERIMENTAL_PROVIDER=docker #/OR =podman
+	kind version   ##---> kind v0.30.0 go1.25.4 X:nodwarf5 linux/amd64
+
+_______:  cluster create/mgm/delete/...:
+	- pre-create:  mvde .kube/config   ##--move/remove old/prev kubeconfigs; a new one will be created by "create cluster" /OR specify alternative config with  --kubeconfig xxx
+	- ! kind create cluster --help
+	- kind create cluster ----config <cluster1.yml>   --name <your-cluster-name instead kind-kind>  --kubeconfig <create config.yml ...
+
+	--- default-/std-create-cluster:
+	kind create cluster --help
+	default-cluster-name  ==  kind-kind   ,  default-create-kubeconfig-file  ==  ~/.kube/config
+	kind create cluster  --name <your-cluster-name instead kind-kind>  --kubeconfig <create config.yml there instead in ~/.kube/...>
+	- ! cluster access configuration is stored in ${HOME}/.kube/config if $KUBECONFIG environment variable is not set.
+	- ! default cluster-name for "create cluster ..." is "kind" and all its cluster names are prefixed with "kind-"!
+		so your clusrter name is kind-kind (if you did not specify own name with: kind create cluster --name mycluster1):
+		kubectl :  to specify the cluster name to interact/query with kubectl (if you have multiple entries in your kubeconfig file), do:  kubectl cluster-info --context <cluster-name>
+
+	---  customized-create-cluster with a yaml-conf-file / config-create-cluster ::
+	- ! https://kind.sigs.k8s.io/docs/user/configuration/
+	- ! https://kind.sigs.k8s.io/docs/user/quick-start/#configuring-your-kind-cluster
+	- kind create cluster ----config <cluster1.yml>   --name <your-cluster-name instead kind-kind>  --kubeconfig <create config.yml ...
+	- yaml-conf_Ref-descp:  https://kind.sigs.k8s.io/docs/user/configuration/
+	- yaml-conf_Ref-eg:  https://raw.githubusercontent.com/kubernetes-sigs/kind/main/site/content/docs/user/kind-example-config.yaml
+
+	---  multi-nodes-custom-cluster ::
+	- ! https://kind.sigs.k8s.io/docs/user/quick-start/#multi-node-clusters
+
+	---
+	- sudo  nc -v -z 192.168.212.82  6443  -w2    ##--check if port 6443 is listening? adapt IP if-req!
+	- after creating cluster, the rest goes with:  kubectl ...
+
+	--- delete:
+	- kind delete cluster  --help
+
+	--- restart/shutdown/stop/... cluster:
+	-!! 1kk:  since the whole cluster is in docker(s), you can use just the docker-cli/-cmds/service to restart/shutdown/...
+		!-BUT there are (older) discussions OL, that stop/shutdown ist nicht vorgesehen for kind-clusters! so have to delete cluster and recreate; but I did with docker commands, and worked for now fine!
+	- restart: systemctl restart docker.service  docker.socket   #-/OR  docker stop/start  <cluster-node-name ,default: kind-control-plane>	
+
+_______:  nodes/pods/cluster-mgm...:
+	-! see trys-logs! here just some eg:
+	cpde ${HOME}/.kube/config  ${HOME}/.kube/ kindXX   #-/OR  set $KUBECONFIG bzw. cluster create --kubeconfig xxx ...
+	---
+	kind get clusters     ##--show all created/setup clusters !
+	kubectl cluster-info --context kind-kind  ##--default cluster name is kind-kind ; otherwise replace it with your cluster-name!
+	---
+	docker ps --all
+	docker image ls -a
+	docker container ls -a
+	---
+	ip -br  addr
+	ip r
+	---
+	kubectl  get nodes -o wide
+	kubectl  get pods -o wide  --all-namespaces
+	---
+	-  see  https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster  for loading images offline / into your cluster:
+	-! for POD create do NOT use :latest tag! then it fetches it anyway from repo! usr ver-no as tagi, if the image is already downloaded by KIND !
+	- for POD create you can also dw images (also as tar-filr) and load it into your cluster !
+	kubectl apply -f pod_alp1.yaml
+	kubectl  exec -it alp1 -- sh
+	kubectl apply -f pod_arx1.yaml
+	kubectl  exec -it arx1 -- /bin/bash
+
+_______:  kind-node itself:
+	- kind itself is a docker/container and using Docker container “nodes”. So basically you can use all docker-cli-cmds to it ...
+	docker exec -it kind-control-plane  crictl images   ##-bzw. set kind-control-plane to your cu-kind-node-name ! kind-control-plane is default-name only but can be adapted during cluster create --name ...
+
+_______:  logs:
+	-!! kind export logs [ --name <cluster-name> ] [ target-dir-path]  ##--!- saves/exports  logs of ALL entities in the cluster into the /tmp/<xxx> or arg-target-dir, incl. their despritions, ...
+

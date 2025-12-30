@@ -1,0 +1,158 @@
+
+
+#####  ==========  /:251227 :  
+-! Fortsetzung/usage of KIND1-setup after reboot! all looks ok! in KIND1-setup the pkgs were installed (see nts there) here again usage/listings/stat/...:
+
+_______:  installs/setup/...-nts (it was already alles there from kind1-try! see nts there! but here short)::
+dnf install  docker-cli  kubernetes1.34  kubernetes1.34-kubeadm-1.34  kubernetes1.34-client-1.34  containerd  containernetworking-plugins  container-selinux 
+	- the KIND installation was from fed-repo! its own DW did not work !?!?
+	-?: maybe only kubernetes1.34-client-1.34 for kubectl was required of kube-stuff!?!? KIND requires kubeadm but maybe it brings it with himself!? 2try!
+	-?: kubernetes1.34-systemd
+
+_______:  systemctl ...
+- I disabled the services , to start them manualy! had to start docker (?: kubelet req? ist still disabled/not-running! and nodes are running ok ...!)
+systemctl disable --now  containerd.service  crio.service  docker.service  docker.socket  firewalld.service  kubelet.service
+systemctl restart docker.service  docker.socket  ###---> triggers also containerd.service as its container-runtime! (CRI-O is uninstalled! but could also work!?)
+systemctl list-unit-files  -t service  | grepi -E 'container|crio|docker|firewall|kube' |sort      ##--shows if installed and enabaled/disabled ! omit -t xxx to see all: also devices/mounts/...
+systemctl list-units -q --type=service | grepi -E 'container|crio|docker|firewall|kube' |sort      ##--shows if running now!
+rpm -qf  /usr/bin/kubectl   ##--->  kubernetes1.34-client-1.34.3-1.fc43.x86_64
+
+_______:  node/pods/docks listings of already in KIND1-tray setup cluster ...:
+kind get clusters     ##--show all created/setup clusters !
+kind
+
+#-default name for create cluster is kind and all its cluster names are prefixed with "kind-"!
+	so your clusrter name is kind-kind (if you did not specify own name with: kind create cluster --name mycluster1):
+	to specify the cluster name to interact/query with kubectl (if you have multiple entries in your kubeconfig file) user: kubectl cluster-info --context <cluster-name> as:
+kubectl cluster-info --context kind-kind  ##--default cluster name is kind-kind ; otherwise replace it with your cluster-name!
+
+docker ps --all
+CONTAINER ID   IMAGE                  COMMAND                  CREATED        STATUS         PORTS                       NAMES
+44939ecdbacd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   16 hours ago   Up 4 minutes   127.0.0.1:34197->6443/tcp   kind-control-plane
+
+docker image ls -a
+IMAGE                                                                                  ID             DISK USAGE   CONTENT SIZE   EXTRA
+kindest/node@sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a   7416a61b42b1       1.45GB          445MB    U
+
+docker container ls -a
+CONTAINER ID   IMAGE                  COMMAND                  CREATED        STATUS         PORTS                       NAMES
+44939ecdbacd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   16 hours ago   Up 2 minutes   127.0.0.1:34197->6443/tcp   kind-control-plane
+
+kubectl  get nodes -o wide
+NAME                 STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION            CONTAINER-RUNTIME
+kind-control-plane   Ready    control-plane   21h   v1.34.0   172.18.0.2    <none>        Debian GNU/Linux 12 (bookworm)   6.17.12-300.fc43.x86_64   containerd://2.1.3
+
+kubectl  get pods -o wide  --all-namespaces
+NAMESPACE            NAME                                         READY   STATUS             RESTARTS        AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+default              alp1                                         1/1     Running            1 (4m51s ago)   14h   10.244.0.3   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-kcf97                     1/1     Running            2 (4m51s ago)   15h   10.244.0.2   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-ssjlc                     1/1     Running            2 (4m51s ago)   15h   10.244.0.4   kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running            2 (4m51s ago)   15h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kindnet-v5gz4                                1/1     Running            1 (4m51s ago)   15h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running            2 (4m51s ago)   15h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   0/1     CrashLoopBackOff   19 (48s ago)    15h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-proxy-c6k29                             1/1     Running            1 (4m51s ago)   15h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running            20 (79s ago)    15h   172.18.0.2   kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-7b8c8ddbd6-6lb2z      1/1     Running            1 (4m51s ago)   15h   10.244.0.5   kind-control-plane   <none>           <none>
+
+_______:  IPs...:
+ip -br  addr
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+enp0s31f6        DOWN
+wwp0s20f0u2i12   DOWN
+wlp4s0           UP             192.168.212.82/24 fe80::b8bc:8363:427f:2e51/64
+br-c22e07c2b902  UP             172.18.0.1/16 fc00:f853:ccd:e793::1/64 fe80::c45:b1ff:febe:e3e8/64
+docker0          DOWN           172.17.0.1/16
+veth886e9c2@if2  UP             fe80::94e8:3cff:fefb:d592/64
+ip r
+default via 192.168.212.1 dev wlp4s0 proto dhcp src 192.168.212.82 metric 600
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown
+172.18.0.0/16 dev br-c22e07c2b902 proto kernel scope link src 172.18.0.1
+192.168.212.0/24 dev wlp4s0 proto kernel scope link src 192.168.212.82 metric 600
+---
+
+kubectl  exec -it alp1 -- sh
+/ # uname -a
+Linux alp1 6.17.12-300.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Dec 13 05:06:24 UTC 2025 x86_64 Linux
+/ # hostname
+alp1
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether 42:f9:43:02:fd:35 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.3/24 brd 10.244.0.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::40f9:43ff:fe02:fd35/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # traceroute  8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 46 byte packets
+ 1  10.244.0.1 (10.244.0.1)  0.026 ms  0.056 ms  0.021 ms
+ 2  2512fed.local (172.18.0.1)  0.023 ms  0.030 ms  0.034 ms
+ 3  WSM20 (192.168.212.1)  2.649 ms  1.326 ms  1.164 ms
+ 4  192.168.115.254 (192.168.115.254)  1.494 ms  1.895 ms  1.565 ms
+ 5  p3e9bf035.dip0.t-ipconnect.de (62.155.240.53)  9.159 ms  9.609 ms  10.031 ms
+ 6  hh-ee1-i.HH.DE.NET.DTAG.DE (217.5.80.182)  16.508 ms  hh-ee1-i.HH.DE.NET.DTAG.DE (217.5.80.178)  15.997 ms  hh-ee1-i.HH.DE.NET.DTAG.DE (217.5.80.182)  16.192 ms
+ 7  *  *  *
+ 8  *  *  *
+ 9  dns.google (8.8.8.8)  42.873 ms  142.251.244.106 (142.251.244.106)  16.779 ms  dns.google (8.8.8.8)  17.676 ms
+
+--- arx1-pod :
+kubectl apply -f pod_arx1.yaml
+pod/arx1 created
+kubectl  get pods -o wide  --all-namespaces 
+NAMESPACE            NAME                                         READY   STATUS             RESTARTS         AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+default              alp1                                         1/1     Running            1 (5h29m ago)    20h   10.244.0.3   kind-control-plane   <none>           <none>
+default              arx1                                         1/1     Running            0                21m   10.244.0.6   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-kcf97                     1/1     Running            2 (5h29m ago)    21h   10.244.0.2   kind-control-plane   <none>           <none>
+kube-system          coredns-66bc5c9577-ssjlc                     1/1     Running            2 (5h29m ago)    21h   10.244.0.4   kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running            2 (5h29m ago)    21h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kindnet-v5gz4                                1/1     Running            1 (5h29m ago)    21h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running            3 (13m ago)      21h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   0/1     CrashLoopBackOff   72 (50s ago)     21h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-proxy-c6k29                             1/1     Running            1 (5h29m ago)    21h   172.18.0.2   kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            0/1     CrashLoopBackOff   71 (3m51s ago)   21h   172.18.0.2   kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-7b8c8ddbd6-6lb2z      1/1     Running            1 (5h29m ago)    21h   10.244.0.5   kind-control-plane   <none>           <none>
+-
+kubectl  exec -it arx1 -- /bin/bash
+[root@arx1 /]# uname -a
+Linux arx1 6.17.12-300.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Dec 13 05:06:24 UTC 2025 x86_64 GNU/Linux
+[root@arx1 /]# traceroute   10.244.0.3
+traceroute to 10.244.0.3 (10.244.0.3), 30 hops max, 60 byte packets
+ 1  _gateway (10.244.0.1)  2.520 ms  0.063 ms  0.044 ms
+ 2  10.244.0.3 (10.244.0.3)  0.101 ms  0.076 ms  0.078 ms
+[root@arx1 /]# traceroute   8.8.8.0
+traceroute to 8.8.8.0 (8.8.8.0), 30 hops max, 60 byte packets
+ 1  _gateway (10.244.0.1)  0.133 ms  0.059 ms  0.058 ms
+ 2  2512fed (172.18.0.1)  0.220 ms  0.130 ms  0.115 ms
+ 3  WSM20 (192.168.212.1)  3.563 ms  3.335 ms  3.587 ms
+...
+
+_______:  kind-node itself:
+docker exec -it kind-control-plane  crictl images
+IMAGE                                           TAG                  IMAGE ID            SIZE
+docker.io/kindest/kindnetd                      v20250512-df8de77b   409467f978b4a       44.4MB
+docker.io/kindest/local-path-helper             v20241212-8ac705d0   baa0d31514ee5       3.08MB
+docker.io/kindest/local-path-provisioner        v20250214-acbabc1a   bbb6209cc873b       22.5MB
+docker.io/library/alpine                        latest               e7b39c54cdeca       3.87MB
+docker.io/library/archlinux                     latest               56ead1ef039fb       175MB
+registry.k8s.io/coredns/coredns                 v1.12.1              52546a367cc9e       22.4MB
+registry.k8s.io/etcd                            3.6.4-0              5f1f5298c888d       74.3MB
+registry.k8s.io/kube-apiserver-amd64            v1.34.0              90550c43ad2bc       89MB
+registry.k8s.io/kube-apiserver                  v1.34.0              90550c43ad2bc       89MB
+registry.k8s.io/kube-controller-manager-amd64   v1.34.0              a0af72f2ec6d6       76MB
+registry.k8s.io/kube-controller-manager         v1.34.0              a0af72f2ec6d6       76MB
+registry.k8s.io/kube-proxy-amd64                v1.34.0              df0860106674d       73.1MB
+registry.k8s.io/kube-proxy                      v1.34.0              df0860106674d       73.1MB
+registry.k8s.io/kube-scheduler-amd64            v1.34.0              46169d968e920       53.8MB
+registry.k8s.io/kube-scheduler                  v1.34.0              46169d968e920       53.8MB
+registry.k8s.io/pause                           3.10                 873ed75102791       320kB
+
+_______:  stop, shutdown / restart
+docker stop kind-control-plane  ##-- start/pause/... see docker-cli-cmds ! KIND-clusters-are just docker-nodes !
+##________________________________________  ___________________________
+

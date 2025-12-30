@@ -4,10 +4,16 @@ _____________________ kubectl cmd dnts: ________________________________________
 
 
 #####  ==========  URLs/helps/...:
-	-!! https://kubernetes.io/docs/reference/kubectl/
+	-!! REF:  https://kubernetes.io/docs/reference/kubectl/
+	- man kubectl , kubectl-config , ...
+	--- 
 	-! kubectl help
 	-! kubectl explain xxx   ##-eg:  kubectl explain pods  [ --recursive ]  #-!see:  kubectl explain --help
-	- man kubectl , kubectl-config , ...
+	- kubectl options  ##-List of global command-line options
+	---
+	- all relevant services/systemctl ::
+		systemctl status  containerd.service  crio.service  docker.service  docker.socket  firewalld.service  kubelet.service
+		-??: crio-wipe.service  minikube runc 
 ##________________________________________  ___________________________
 
 
@@ -52,7 +58,7 @@ _______:  describe :
 
 
 #####  ==========  rollouts/rollbacks/...
-	_______:  enforcing a rollout (new PODs! replacement of cu-pods with new ones):
+_______:  enforcing a rollout (new PODs! replacement of cu-pods with new ones):
 	- Trigger the rollout:  kubectl rollout restart deployment configmap-env-var
 	- Wait for the rollout to complete: kubectl rollout status deployment configmap-env-var --watch=true
 	see https://kubernetes.io/docs/tutorials/configuration/
@@ -77,12 +83,50 @@ _______:  describe :
 
 
 ##################### qkys/shorties/...: ##############################################################
-_______:  OSs (not directly kubectl, but OS ...):
-systemctl status  docker.service  docker.socket  containerd.service  crio.service  kubelet.service
+https://phoenixnap.com/kb/kubectl-commands-cheat-sheet
 
-_______:  
+_______:  Listing Resources
 	kubectl  cluster-info [ dump ]
-
-_______:  
+	kubectl get namespaces
 	kubectl  describe xxx
+	kubectl get pods -o wide
+	kubectl get pods --field-selector=spec.nodeName=[server-name]
+	List a specific replication controller in plain-text:   kubectl get replicationcontroller [replication-controller-name]
+	kubectl get replicationcontroller,services
+	--
+	-! kubectl api-resources  | sort
+
+_______:  describe ...:
+	kubectl describe nodes/pods [node-name]
+
+_______:  Creating a Resource ::
+	kubectl create namespace [namespace-name]
+
+_______:  Applying and Updating a Resource ::
+	kubectl apply -f [service-name].yaml
+	Create the objects defined in any .yaml, .yml, or .json file in a directory:  kubectl apply -f [directory-name]
+	--- edit configs/svc/... ::
+	kubectl edit xxx  ==  combination of kubectl get and kubectl apply.
+	kubectl edit svc/[service-name]
+	KUBE_EDITOR=”[editor-name]” kubectl edit svc/[service-name]
+
+_______:  Deleting Resources ::
+	kubectl delete -f pod.yaml
+	Use a specific label to remove all pods and services:   kubectl delete pods,services -l [label-key]=[label-value]
+	kubectl delete pods --all
+
+_______:  Executing a Command ::
+	kubectl exec [pod-name] -- [command]
+	kubectl exec [pod-name] -c [container-name] -- [command]
+	kubectl exec -it [pod-name] -- /bin/bash
+	kubectl  attach arx1 -it
+
+_______:  Modifying kubeconfig Files ::
+	Display the current context:   kubectl config current-context
+	Set a cluster entry in kubeconfig: kubectl config set-cluster [cluster-name] --server=[server-name]
+	Unset an entry in kubeconfig:   kubectl config unset [property-name]
+
+_______:  logs ::
+	kubectl logs [pod-name]  [ -f ]   ##-- follow logs:  -f
+
 

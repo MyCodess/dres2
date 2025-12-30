@@ -2,7 +2,6 @@
 -! see /etc/docker/daemon.json  for evv-cu-adaptions (for images-dir,...)
 -! NO symlink/rel-path in docker/minikube configs!! ONLY absolute-phys-path! also check in /etc/docker/daemon.json and MINIKUBE_HOME !
 
-
 #####  ==========  docs/urls/...:
 	REF-cmds:  https://docs.docker.com/reference/
 	https://wiki.archlinux.org/title/Docker
@@ -15,6 +14,8 @@ _______:  VOCABs
 	https://docs.docker.com/get-started/docker-overview/
 	https://docs.docker.com/reference/glossary/
 	https://wiki.archlinux.org/title/Docker#Usag
+	---
+	-!! for   docker-cli <--> containerd  <--> K8s <--> CRI  <--> CRI-O  <--> OCI interface  <--> runc  <-->  phy-containers  :: see https://phoenixnap.com/kb/docker-vs-containerd-vs-cri-o
 	---
 	Docker consists of multiple/4 parts:
 	1- server: docker daemon/engine : "dockerd" /  docker.service :: manages Docker containers/images ; serves the Docker API (through CLI cmds) and manages Docker containers.
@@ -34,7 +35,31 @@ _______:  VOCABs
 ##________________________________________  ___________________________
 
 
-#####  ==========  install/setup/config-on-arx1-docker on 2209arx  /:251016 :  
+#####  ==========  install/setup/config docker:
+_______:  fedora install ::
+		-! https://developer.fedoraproject.org/tools/docker/docker-installation.html  ::
+		- ! there are TWO variants to setup docker engine: fedora-pkgs OR Docker-Inc.-pkgs! BUT do NOT mix them!! see above url !
+		- docker geht obv. alles via containerd! so the docker-images (trotz config in daemon.json) but are saved in /var/lib/containerd/  by containerd :  /etc/containerd/config.toml
+
+	--- either fedora-pkgs-itself (with moby-engine as docker-engine):
+		https://docs.fedoraproject.org/en-US/quick-docs/installing-docker/
+		sudo dnf install docker-cli  +  either: containerd  /or cri-o ;  ##--?more: docker-compose docker-compose-switch ...
+
+	--- /OR docker.com xxx-ce pkgs  (then either via decker-desktop or only docker-pkgs of docker.com; with docker-ce as docker-engine):
+		- ! first MUST uninstall fed-docker-pkgs! ::
+		- https://docs.docker.com/engine/install/fedora/ , https://developer.fedoraproject.org/tools/docker/docker-installation.html 
+		- DW the rpm and ...
+		dnf config-manager addrepo --from-repofile="https://download.docker.com/linux/fedora/docker-ce.repo"
+		dnf install docker-ce docker-ce-cli containerd.io  ##-- compose-plugin, ...
+		systemctl restart docker ; sudo docker run hello-world ; ##-?: systemctl enable docker
+		--- uninstall docker.com-pkgs:  https://docs.docker.com/engine/install/fedora/#install-using-the-repository
+		dnf remove docker-ce docker-ce-cli  docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extra containerd.io  ; ##-: containerd.io must then reinstall later, if want fed-docker-pkg!
+		rm -rf /var/lib/docker  /var/lib/containerd ; rm $(whichll docker) ;
+		rm /etc/yum.repos.d/docker-ce.rep
+	---
+	systemctl  restart   containerd.service  docker.service  docker.socket
+
+_______:  arx1-docker on 2209arx  /:251016 :  
 	- https://wiki.archlinux.org/title/Docker
 	- ! many cmds require sudo /OR a user in "docker" group (user has to re-login if ihis group assignment is new!)! so if not ok try with sudo all stuff ! here only install cmds done by root:
 	- pacman -Suy  docker
@@ -58,25 +83,6 @@ _______:  VOCABs
 	---
 	- ! if the Docker daemon stops or restarts, all currently running Docker containers are also stopped or restarted.
 	- more packages/utils/GUIs/apps see there! as Docker Compose , Docker Desktop , Front-ends , ...!
-
-_______:  fedora install ::
-	--- either fedora-pkgs-itself (with moby-engine as docker-engine):
-		https://docs.fedoraproject.org/en-US/quick-docs/installing-docker/
-		sudo dnf install docker-cli containerd ;  ##--?more: docker-compose docker-compose-switch ...
-
-	--- /OR docker.com xxx-ce pkgs  (then either via decker-desktop or only docker-pkgs of docker.com; with docker-ce as docker-engine):
-		- ! first MUST uninstall fed-docker-pkgs! ::
-		- https://docs.docker.com/engine/install/fedora/ , https://developer.fedoraproject.org/tools/docker/docker-installation.html 
-		- DW the rpm and ...
-		dnf config-manager addrepo --from-repofile="https://download.docker.com/linux/fedora/docker-ce.repo"
-		dnf install docker-ce docker-ce-cli containerd.io  ##-- compose-plugin, ...
-		systemctl restart docker ; sudo docker run hello-world ; ##-?: systemctl enable docker
-		--- uninstall docker.com-pkgs:  https://docs.docker.com/engine/install/fedora/#install-using-the-repository
-		dnf remove docker-ce docker-ce-cli  docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extra containerd.io  ; ##-: containerd.io must then reinstall later, if want fed-docker-pkg!
-		rm -rf /var/lib/docker  /var/lib/containerd ; rm $(whichll docker) ;
-		rm /etc/yum.repos.d/docker-ce.rep
-	---
-	systemctl  restart   containerd.service  docker.service  docker.socket
 ##________________________________________  ___________________________
 
 
