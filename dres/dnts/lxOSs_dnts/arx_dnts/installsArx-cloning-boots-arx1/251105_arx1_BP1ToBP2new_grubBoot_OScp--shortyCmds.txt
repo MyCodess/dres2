@@ -22,7 +22,7 @@ sgdisk -o -n 1:0:+100M  -n 2:0:+3G  -n 3:0:+50G  -n 4:0:-0  -t 1:EF02  -t 2:EF00
 _______:  
 mkfs.vfat  -v -n ESP1   -i 22222222  -c  /dev/sdb2
 date;  mkfs.ext4  -L  2209ARX_P   -v  -c -U 22223333-2222-2222-2222-222222222222   /dev/sdb3 ; date  ###-- ca. 10 Min (also an Hub doppel so lange!)
-kfs.exfat   -L  T1FS_P   /dev/sdb4 ; tune.exfat   -I  0x22224444  /dev/sdb4 ;
+mkfs.exfat   -L  T1FS_P   /dev/sdb4 ; tune.exfat   -I  0x22224444  /dev/sdb4 ;
 --
 ~ : lsblk1
 /dev/sdb                                                                                                            114.6G disk

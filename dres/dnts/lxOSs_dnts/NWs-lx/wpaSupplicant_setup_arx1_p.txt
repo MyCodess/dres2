@@ -13,6 +13,7 @@ https://github.com/nicolaka/netshoot
 ############################# __CP__ von 2209arx-NW-setupo see _RF there! : #################################
 
 	_______:  NW-HWs/adapters :
+	- ! is NW-hardware  unblocked/enabled??:  rfkill   ##--must see the HW-interfaces unblocked !! otherwise enable it: either <Fn>+xx OR maybe in BIOS/firmware is disabled !?
 	- NW-cards-traditional-naming !! for removable/USB-install is better the traditional naming of NW-cards as eth0/wlan0 ! otherwise on each PC thw wlan-card is named differently and then the wpa_supplicant -i xxx does NOT work properly !!
 	- check that traditional-NW-cards-naming (eth0/wlan0) is used:   ip link ##-- must shows wlan0/eth0 ! otherwise do (requires probably reboot):
 	#_  ln -s  /dev/null  /etc/udev/rules.d/80-net-setup-link.rules    ##--requires reboot ...; check it : ip link
