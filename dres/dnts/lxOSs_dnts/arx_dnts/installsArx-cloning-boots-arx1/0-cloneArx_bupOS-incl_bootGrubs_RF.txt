@@ -1,12 +1,26 @@
-2025-11-01T19:36:15 CET
-target-medium: new clean 128GB-usb-stick on /dev/sdb , attached to arx1-usb-HP13-on-/dev/sda3 : partionining+formatting+syncs ...
+______________________________ ARX-OS mirrotin/cloning/backup with tar/rsync incl. making bootable-media with grub2 ______________________________
+- latest full-act 2025-11-01T19:36:15 CET + addies/modifs later ....
+- ! for latest-FULL-NEW-install_dnts (so NOT-cloning/mirroring, but NEW-install ) see 2601arx/stat_2601arx/setup0-2601arx_dnts.txt !  here synced-syys-setup of 2209ARX !
+---
+- ! see:  https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux#Create_a_copy_of_an_existing_Arch_installation
+- https://wiki.archlinux.org/title/Rsync#Full_system_backup 
+- https://wiki.archlinux.org/title/Full_system_backup_with_tar
+
+
+#####  ==========  RF-Allg-evv-conv/namings of installs/medias/parts/...:
+_______:  UUIDs-conv in evv-syys:
+	main-syys:   0N0NFm00 :  N==syys_uuid_ID ,  F==Partition, m==Part.No, eg:  0202F300-0202-0202-...
+	tiny-/dailay/smallies/dummies-syys :  C00NFm00 ,                      eg:  C002F300-C002-C002-...
+##________________________________________  ___________________________
+
+
+#####  ==========  medias-infs:  src:  arx1 running on-HP13 / sda , target: new clean 128GB-usb-stick on /dev/sdb ::
+---
+- target-medium: new clean 128GB-usb-stick on /dev/sdb , attached to arx1-usb-HP13-on-/dev/sda3 : partionining+formatting+syncs ...
 - ausser-for--OS-sync : alles on arx1-HP13 : /dev/sda : src ;  /dev/sdb : new-target !
 - for OS-sync-offline : HP13 booted from Fed-usb-stick ( and then both src+target attached to HP3: sdb + sdc) ! BUT later on again for configs of new-stick again booted from src-arx1-on-HP13 !
----
--!! ALWAYS check again and again OS-time !! each boot ins MsWIn reset it again to MS-time/local-time (if registry-modif not done!!
----
-
-#####  ==========  src: (arx1-on-HP13)
+-! ALWAYS check OS-time immer WIEDER after each reboot ...!! each boot ins MsWIn reset it again to MS-time/local-time (if registry-modif not done!!
+--- src:
 NAME                   FSTYPE FSVER LABEL       UUID                                 FSAVAIL FSUSE% MOUNTPOINTS        SIZE TYPE
 /dev/sda                                                                                                             114,6G disk
 ├─/dev/sda1                                                                                                            100M part
@@ -83,11 +97,22 @@ _______:  check-it if bootable:(even before copying/settingup any OSs/grub.cfg, 
 	 since the cp will not be uptodate anyway! the latest better copiey are bups1-tars and can be unpacked if the new usb-stick will go really online ...
 
 #####  ==========  confs-new/target-OS:
+	- ! see:  https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux#Create_a_copy_of_an_existing_Arch_installation  ::
 	- mount   /dev/sdb2  /mnt/t1; ... ; umount /dev/sdb*  ::
 	sed -i-$($cuds)  -e 's@4361-3230@1111-2222@g'  -e 's@8eadf68b-ed69-4dfe-948a-9fe297645142@11113333-1111-1111-1111-111111111111@g'  -e 's@67FF-921F@1111-4444@g'  /mnt/t1/grub/grub.cfg
 	- mount   /dev/sdb3  /mnt/t1; ... ; umount /dev/sdb*  ::
 	sed -i-$($cuds)  -e 's@4361-3230@1111-2222@g'  -e 's@8eadf68b-ed69-4dfe-948a-9fe297645142@11113333-1111-1111-1111-111111111111@g'  -e 's@67FF-921F@1111-4444@g'  /mnt/t1/etc/fstab
-	- rm /etc/machine-id  #-and create a new one with systemd-machine-id-setup(1)  ,see  https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux , man machine-id , man systemd-machine-id-setup , https://systemd.io/BUILDING_IMAGES
+	--- rm /etc/machine-id  ##--:
+		- ! see:  ! man machine-id ! , also: man systemd-machine-id-setup  https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux , https://systemd.io/BUILDING_IMAGES
+		- To generate a new ID, delete /etc/machine-id, reboot, and run systemd-machine-id-setup ; Alternatively, dbus-uuidgen --ensure=/etc/machine-id can be used !
+		- sudo  systemd-machine-id-setup  ##--without reboot obv. it generated the same as latest !? 2chk!
+		- machine ID :: a single newline-terminated, hexadecimal, 32-character, lowercase ID.
+		- This ID uniquely identifies the host. It should be considered "confidential", and must not be exposed in untrusted environments, in particular on the network.  :: man machine-id
+		- For operating system images which are created once and used on multiple machines, for example for containers or in the cloud, /etc/machine-id should be either missing or an empty file ... :: man machine-id
+	---
+	- ! if the newSyys/targetSyys has eg NEW-HWs or new-filesystem-type ,..., then you MUST Creating a new initramfs by:  mkinitcpio -P ! https://wiki.archlinux.org/title/Installation_guide#Initramfs ::
+		but since in evv-syys the autodetect is deleted from /etc/mkinitcpio.conf , evtl. it is not required! but in case of problems there, just create new initramfs / mkinitcpio -P ... !
+		also check that microcode for the targetPC are there in /boot/ ...!
 
 #####  ==========  missing-stuff unpacking/creating/....:
 	- /home--tree :  cdla /mnt/t1/VARUfs_P/2209arx ; mkdircd unp1; tar -xzpvf /up1/varu/varau/bups11_P/bupsvar1/home_2209arx--251104-130000--offline.tgz ; mv ./home/ ../ ; ...
@@ -95,8 +120,10 @@ _______:  check-it if bootable:(even before copying/settingup any OSs/grub.cfg, 
 	- T1FS-tree   :  mount /dev/sdb4 /mnt/t4 ; cdla /mnt/t4 ;  mkdir -p  $(cd /up1/mnt/T1fs &&  tree -dif -L2 ./t1_RF/) ;  ##--/OR -L3 ???
 		- so for now t1 rather empty; later if live/online, just untar w1-bups, syys-bups, .... ! for now ausreichend just to boot/mount properly without errors,...!
 
-############################## 1coll...: ########################################################
 
+
+
+############################## 1coll...: ########################################################
 #####  ==========  /:251104 :  pre-formats/syncs-lsblk, pos-partitioning
 sudo gdisk -l /dev/sdb
 GPT fdisk (gdisk) version 1.0.10

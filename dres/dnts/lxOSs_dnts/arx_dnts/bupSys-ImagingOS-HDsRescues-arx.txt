@@ -3,36 +3,39 @@ ___________ HD-Rescues, Disk-Cloning, OS-Imaging, Sys-Backups,.. _______________
 
 
 #####  ==========  docs/WPs:
--!!! https://wiki.archlinux.org/index.php/System_backup   :
-	-!!  https://wiki.archlinux.org/index.php/Full_system_backup_with_tar
-	-!!  https://wiki.archlinux.org/index.php/System-tar-and-restore
-	-!!  https://wiki.archlinux.org/index.php/Disk_cloning , ...
-	-!!  https://wiki.archlinux.org/index.php/Dd
+	-!! https://wiki.archlinux.org/index.php/System_backup   :
+	-!  https://wiki.archlinux.org/title/Rsync#Full_system_backup
+	-!  https://wiki.archlinux.org/title/Full_system_backup_with_tar
+	-!  https://wiki.archlinux.org/title/Disk_cloning        :: also there filesystem-cloning, ...
+	-!  https://wiki.archlinux.org/index.php/Dd
+	-!  pkg / AUR : https://aur.archlinux.org/packages/system-tar-and-restore/
 ##________________________________________  ___________________________
 
 
 #####  ==========  tar-backup-from-whole-system/OS:
--!!  https://wiki.archlinux.org/index.php/Full_system_backup_with_tar
--!!  https://wiki.archlinux.org/index.php/System-tar-and-restore    ---> package   https://aur.archlinux.org/packages/system-tar-and-restore/
+	-!  https://wiki.archlinux.org/index.php/Full_system_backup_with_tar
+	-!  pkg / AUR : https://aur.archlinux.org/packages/system-tar-and-restore/
 
-	_______:  !! short-answer:  basically  boot from a liveUSB/LiveSystem , mount the backup-parts/target-OS , cd to it (dur to tar-saved-path in the tgz file) 
-	and do :    tar  --xattrs  -czpvf  /<usb-media>/backup1.tgz  ./  ##--!!-without chroot, later by restoring you have to modify a few things , eg restored-tar-path ... (for chroot cariation see below)
-	- important are only:  -p and --xattrs
+	_______:  !! short-answer:  basically:
+	- boot from another-Lx/liveUSB/LiveSystem ,
+	- mount the backup-media + OS-toBeBackuped 
+	- chroot to it /OR?: cd to it (due to tar-saved-path in the tgz file) , but NOT using arch-chroot (it trys to mount /dev/, /sys/, ...; NOT-ok for bup!)
+		-! -without chroot, later by restoring you have to modify a few things , eg restored-tar-path ... (for chroot cariation see below)!  better is with chroot !
+	- tar --exclude-from="$exclude_file" --acls --xattrs -cpaf "$backupfile" /   ##--exclude /dev /run /tmp/ /sys/ ... ; -v takes longer!
 	- ofcourse you can/should also exclude cache/tmp/... ; or a file containing exclude-regExp and use tar --exclude-from=myExcludeListing.txt ...
-	-! better is with chroot
-- longer variation with chroot,... see https://wiki.archlinux.org/index.php/Full_system_backup_with_tar
+	- backup-script also in above URL !
 ##________________________________________  ___________________________
 
 
 #####  ==========  Disk-Cloning:
--!  https://wiki.archlinux.org/index.php/Disk_cloning
-- https://wiki.archlinux.org/index.php/Dd
+	-!  https://wiki.archlinux.org/index.php/Disk_cloning
+	- https://wiki.archlinux.org/index.php/Dd
 ##________________________________________  ___________________________
 
 
 #####  ==========  Rescue corrupted/damaged Parts/HDs/Systems:
--! https://wiki.archlinux.org/index.php/File_recovery
--! testdisk 
+	-! https://wiki.archlinux.org/index.php/File_recovery
+	-! testdisk 
 
 	_______:  ddresue :
 	-!! https://wiki.archlinux.org/index.php/Disk_cloning
