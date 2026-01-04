@@ -9,10 +9,6 @@ _______________________
 
 #####  ==========  DELL-sodes,...:
     OptiPlex 3060 Micro
-    Service-Tag: CWFY3Z2
-    Express-Servicecode: 28083091358
-    Support Services: Abgelaufen 27 OKT. 2020
-    https://www.dell.com/support/home/de-de/product-support/servicetag/0-RFBkcW9Md1UzWTc0Si91dHhoaUZmUT090/overview
     --
     kleiner lufterloser DEL PC, Neu WIn11 Setup in KG1
 ##________________________________________  ___________________________
